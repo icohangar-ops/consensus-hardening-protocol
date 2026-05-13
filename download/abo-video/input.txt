@@ -1,0 +1,17 @@
+file 'slides/slide_01_title.jpg'
+duration 31.7
+file 'slides/slide_02_problem.jpg'
+duration 47.8
+file 'slides/slide_03_solution.jpg'
+duration 41.8
+file 'slides/slide_04_leads.jpg'
+duration 21.0
+file 'slides/slide_05_onboarding_delivery.jpg'
+duration 21.4
+file 'slides/slide_06_architecture.jpg'
+duration 22.0
+file 'slides/slide_07_stats.jpg'
+duration 22.7
+file 'slides/slide_08_closing.jpg'
+duration 42.3
+file 'slides/slide_08_closing.jpg'
