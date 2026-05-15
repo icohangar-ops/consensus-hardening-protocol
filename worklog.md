@@ -289,3 +289,24 @@ Stage Summary:
 - Slides: docs/media/clips/s1-s8.png (1920x1080 source assets)
 - GitHub: PUSHED successfully to Cubiczan/consensus-hardening-protocol
 - Codeberg: BLOCKED - token expired, needs fresh token from user
+
+---
+Task ID: 5
+Agent: main
+Task: Draft DEV.to Gemma 4 Challenge submission + cover image + demo video
+
+Work Log:
+- Researched Gemma 4 challenge: two prompts (Build + Write), $3000 prize pool, 10 winners, deadline May 24 2026
+- Researched Gemma 4 models: E2B, E4B, 26B MoE, 31B Dense — chose 31B Dense for deep reasoning
+- Drafted full DEV.to article (279 lines): What I Built, Demo, Code, How I Used Gemma 4
+- Generated AI cover image (1344x768 raw) and applied branded overlay (1200x630 DEV.to format)
+- Created 8 custom slides (1920x1080) covering: title, problem, architecture, Gemma 4 integration, lock states, workflows, finance suite, get started
+- Generated 3-minute demo video (180.0s, 1080p, H.264, 4.7MB) with fade transitions
+- Pushed cover image + video to GitHub + Codeberg for raw URLs
+
+Stage Summary:
+- Article: /home/z/my-project/download/gemma4-challenge-submission.md (16KB, DEV.to Markdown)
+- Cover: docs/media/chp-gemma4-cover.png (703KB, 1200x630) — on GitHub + Codeberg
+- Video: docs/media/chp-gemma4-demo.mp4 (4.7MB, 180s, 1080p) — on GitHub + Codeberg
+- Cover raw URL: https://github.com/Cubiczan/consensus-hardening-protocol/raw/main/docs/media/chp-gemma4-cover.png
+- Video raw URL: https://github.com/Cubiczan/consensus-hardening-protocol/raw/main/docs/media/chp-gemma4-demo.mp4
