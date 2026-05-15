@@ -267,3 +267,25 @@ Stage Summary:
 - market-radar: README.md + docs/market-radar-screenshot.png → pushed to GitHub + Codeberg
 - finance-cockpit: README.md + docs/finance-cockpit-screenshot.png → pushed to GitHub + Codeberg
 - decision-brief: README.md + docs/decision-brief-screenshot.png → pushed to GitHub + Codeberg
+
+---
+Task ID: 4
+Agent: main
+Task: Create 3-minute demo video + thumbnail for consensus-hardening-protocol repo
+
+Work Log:
+- Read repo contents: 8 slide clips (1920x1080), existing 15s placeholder video, existing thumbnail
+- Created 3-minute video (180.0s, 1920x1080, H.264, 2.9MB) using ffmpeg concat demuxer with per-clip fade transitions
+- Generated branded thumbnail (1280x720, 95KB) with CHP title badge, feature tags, and 3:00 duration indicator
+- Generated GitHub social preview card (1200x675, 93KB)
+- Updated README.md video reference from broken URL to clickable thumbnail link
+- Resolved git branch divergence (main vs main2), merged and pushed to GitHub
+- Codeberg push blocked: token expired from previous session
+
+Stage Summary:
+- Video: docs/media/chp-demo-3min.mp4 (180s, 1080p, H.264, faststart)
+- Thumbnail: docs/media/chp-thumbnail.png (1280x720, branded)
+- Social: docs/media/chp-social-preview.png (1200x675)
+- Slides: docs/media/clips/s1-s8.png (1920x1080 source assets)
+- GitHub: PUSHED successfully to Cubiczan/consensus-hardening-protocol
+- Codeberg: BLOCKED - token expired, needs fresh token from user
