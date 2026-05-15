@@ -1,0 +1,74 @@
+[
+  {
+    "url": "https://marketplace.atlassian.com/apps/1233450/financials-for-jira-project-cost-revenue-tracking",
+    "name": "Financials for Jira (Project Cost & Revenue Tracking)",
+    "snippet": "Comprehensive project financial management tool for efficient tracking and analysis. Streamline budget management and enhance project control.",
+    "host_name": "marketplace.atlassian.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://marketplace.atlassian.com/apps/1213234/finance-for-jira",
+    "name": "Finance for Jira | Atlassian Marketplace",
+    "snippet": "JiraFinance helps you to control budget of project. Watch financial plan of project in real time. JiraFinance is a professional tool that helps you to control:.",
+    "host_name": "marketplace.atlassian.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.atlassian.com/blog/development/runs-on-atlassian-apps-can-now-take-home-100-of-marketplace-revenue",
+    "name": "Runs on Atlassian Apps Can Now Take Home 100% of Marketplace",
+    "snippet": "Runs on Atlassian apps and standard Forge apps both count toward Forge lifetime revenue from the date they are listed on the Marketplace. Today, ...\nWith the new incentive, a partner can keep 100% of revenue earned by their Runs on Atlassian apps until the balance in that account reaches $1 ...",
+    "host_name": "www.atlassian.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.atlassian.com/forums/App-Central-articles/Top-3-Cost-amp-Budget-Tracking-Apps-for-Jira/ba-p/2281214",
+    "name": "Top-3 Cost&Budget Tracking Apps for Jira - Atlassian Community",
+    "snippet": "Cost Tracker by Tempo is the largest app available in the Atlassian Marketplace. Visualization works great, and you can clearly see the flow of ...",
+    "host_name": "community.atlassian.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.atlassian.com/forums/App-Central-articles/Jira-for-Finance-Teams-Automate-Budgeting-Expense-Tracking-and/ba-p/3057780",
+    "name": "Jira for Finance Teams: Automate Budgeting, Expens",
+    "snippet": "Available on the Atlassian Marketplace — fully compatible with Jira Assets and Automation. ⚙️ Automate Budget Tracking. With Jira Automation, ...",
+    "host_name": "community.atlassian.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.atlassian.com/blog/development/updates-to-marketplace-revenue-share-2026",
+    "name": "Updates to Marketplace Revenue Share: 2026 - Inside Atlassian",
+    "snippet": "Revenue share rates for Connect apps will go from 15% to 20% on 1 January 2026 and will increase to 25% on 1 July 2026. Forge revenue share ...\nAs of 1 January 2026, the partner's lifetime Forge revenue will be tracked at $150,000. The partner will pay 0% revenue share on $850,000 in ...",
+    "host_name": "www.atlassian.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://snapbytes.com/en/what-is-atlassian-forge-why-does-it-cost-money",
+    "name": "What Is Atlassian Forge? - 1 - Snapbytes",
+    "snippet": "Jira and Confluence are indispensable for modern teams. However, it is the applications and plugins we add from the Atlassian Marketplace that fully unlock ...\nSnapMetrics – Real Time Analytics: Helping teams effortlessly measure, analyze and optimize their workloads, this real-time performance monitoring tool keeps ...",
+    "host_name": "snapbytes.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=u0300_WC_R0",
+    "name": "Financials with Jira Align | Atlassian - YouTube",
+    "snippet": "In this video, we explore how Jira Align supports financials, from budget and forecasted spend to estimated and accepted spend.",
+    "host_name": "www.youtube.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  }
+]

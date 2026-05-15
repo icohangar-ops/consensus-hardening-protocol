@@ -1,0 +1,37 @@
+app:
+  id: ari:cloud:ecosystem::app/41c82150-6c0a-4e81-a627-b4b2c06a19df
+  runtime:
+    name: nodejs24.x
+
+permissions:
+  scopes:
+    - read:jira-work
+    - storage:app
+  external:
+    fetch:
+      backend:
+        - "https://db-proxy.example.com"
+
+modules:
+  jira:projectPage:
+    - key: decision-brief-panel
+      resource: main
+      resolver:
+        function: resolver
+      title: Decision Brief
+      description: CFO-grade decision briefs with adversarial rounds, audit trails, and risk signals
+      icon: https://developer.atlassian.com/platform/forge/images/icons/decision-icon.svg
+
+  webtrigger:
+    - key: decision-brief-webtrigger
+      function: webhook-handler
+
+  function:
+    - key: resolver
+      handler: index.handler
+    - key: webhook-handler
+      handler: webhook.handler
+
+resources:
+  - key: main
+    path: src/frontend

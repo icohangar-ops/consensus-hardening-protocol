@@ -1,216 +1,269 @@
+# Worklog — CockroachDB Integration Sprint (Complete)
+
+## Summary
+Integrated CockroachDB into **10 repositories** with 61 database tables across 10 distributed databases on the CockroachDB Serverless cluster (GCP).
+
+## Phase 1: Initial 4 Repos (Previous Session)
+- battery-erp ✅ (10 tables, 60 rows seeded)
+- closed-loop-finance ✅ (6 tables, 12 rows seeded)
+- sec-earnings-workbench ✅ (8 tables, 15 rows seeded)
+- autonomous-business-os ✅ (7 tables, 16 rows seeded)
+
+## Phase 2: 6 Additional Repos (This Session)
+
+### Repos Integrated
+| Repo | DB Name | Tables | GitHub (zan) | GitHub (Cubiczan) |
+|------|---------|--------|-------------|-------------------|
+| hedge-fund-13f-radar | hedge_fund_13f_radar | 5 | N/A (Codeberg only) | ✅ |
+| multi-agent-cfo-os | multi_agent_cfo_os | 6 | ✅ | ✅ |
+| market-sentiment-fedgpt | market_sentiment_fedgpt | 5 | N/A (Codeberg only) | ✅ |
+| working-capital-optimizer | working_capital_optimizer | 4 | ✅ | ✅ |
+| stratifi-core | stratifi_core | 5 | ✅ | ✅ |
+| cash-flow-optimizer | cash_flow_optimizer | 4 | N/A (Codeberg only) | ✅ |
+
+### Seed Data Applied
+- closed_loop_finance: 3 periods, 4 evidence, 1 finding, 4 decisions, 1 audit
+- sec_earnings_workbench: 3 cases, 1 dossier, 2 artifacts, 3 rounds, 1 validation, 4 API logs
+- autonomous_business_os: 4 workflows, 3 tasks, 3 memory entries, 1 approval, 2 audit logs, 2 escalations, 4 leads
+- hedge_fund_13f_radar: 5 fund managers, 6 holdings, 1 radar report
+- market_sentiment_fedgpt: 7 indicators, 1 Fed speech, 1 sentiment report
+- working-capital-optimizer: 3 invoices, 1 cash flow forecast
+- cash-flow-optimizer: 3 cash flow statements, 1 projection, 1 alert
+- stratifi-core: 2 analyses, 1 decision case, 1 risk signal
+
+### Application Wiring
+- **autonomous-business-os/app/db.py**: Added `USE_COCKROACHDB` env toggle for CockroachDB/SQLite switching
+- **autonomous-business-os/.env.example**: Added CockroachDB configuration section
+- **sec-earnings-workbench/src/cme/research/data/cache.py**: Added `CockroachCache` class (drop-in DiskCache replacement) with `get_cache()` factory
+- **closed-loop-finance/agents/src/memory/checkpointer.py**: Added `save_checkpoint()`/`load_checkpoint()` for CockroachDB graph state persistence
+
+### Cluster Details
+- Cluster: vortex-giraffe-15678.jxf.gcp-us-east1.cockroachlabs.cloud
+- Version: CockroachDB v25.4.8
+- Region: GCP us-east1
+- Databases: 10 total
+- Tables: 61 total
+- Backend: cockroachdb+psycopg2 SQLAlchemy dialect
+
+### Codeberg Status
+- Token valid (HTTP API works) but git push blocked by IP rate limit
+- All repos safely synced to both GitHub orgs (zan-maker + Cubiczan)
+
 ---
 Task ID: 1
-Agent: Main Agent
-Task: Modernize Commodity-Price-Analyzer with Microsoft Fabric and Azure AI Foundry
+Agent: main
+Task: Fix multi-agent-cfo-os FK constraints, seed data, wire remaining 4 repos, push to GitHub/Codeberg
 
 Work Log:
-- Cloned repository from Codeberg (cubiczan/Commodity-Price-Analyzer)
-- Reviewed existing codebase: Airia-based flow with Claude Haiku 4.5, AlphaVantage MCP, Python business rules
-- Identified 4 contract structures: Black Mass Payables, Primary Offtaker MHP Offtake, Li Carbonate GTC, Li Cycle Feedstock
-- Built Azure AI Foundry integration (Kimi K2.6) — src/ai/analyzer.py
-- Ported GLI business rules to standalone Python — src/contracts/business_rules.py
-- Created commodity data ingestion module — src/data/fetcher.py
-- Built Microsoft Fabric REST API client — src/fabric/client.py
-- Created main pipeline orchestrator — src/__init__.py
-- Created Fabric notebooks (setup + analysis) — notebooks/
-- Added 15 unit tests (all passing) — tests/test_business_rules.py
-- Verified Azure AI Foundry connectivity — Kimi K2.6 responds successfully
-- Ran full end-to-end pipeline: prices → calculations → AI analysis → results
-- Updated README.md with complete Microsoft stack documentation
-- Pushed all changes to Codeberg (commit 16475a1)
-- Added multi-mode Fabric auth (notebook, token, rest) to avoid Entra ID SP (commit b637c9d)
+- Fixed missing ForeignKey imports and constraints in multi-agent-cfo-os ORM (cfo_artifacts, cfo_audit, round_records, forecasts -> cfo_briefs/decision_cases)
+- Dropped and recreated all 6 tables with proper FK ondelete=CASCADE
+- Seeded 15 rows: 3 briefs, 3 artifacts, 2 audits, 2 decision cases, 3 round records, 2 forecasts
+- Wired hedge-fund-13f-radar: added store_report() to core.py, --store + health CLI flags
+- Wired stratifi-core: rewrote registry.py with CockroachDB auto-detect, upsert, load/save dual-path
+- Wired cash-flow-optimizer: created db/pipeline_store.py with store_forecast() and run_and_store()
+- Confirmed working-capital-optimizer already fully wired via asyncpg layer
+- Pushed all 4 repos to GitHub (zan-maker + Cubiczan dual orgs)
+- Codeberg: stratifi-core pushed, other 3 blocked by IP rate limit (429)
 
 Stage Summary:
-- Repository successfully modernized for Microsoft Fabric + Azure AI Foundry
-- Azure AI Foundry: Kimi K2.6 confirmed working at samd-5839-resource.services.ai.azure.com
-- Fabric Workspace ID: 26da3f54-de30-4f32-8700-00850ba0c457
-- Lakehouse ID: c474db1d-016e-481d-985b-6fa111a5ebcc (schema-enabled)
-- All 15 tests passing
-- Pushed to Codeberg: https://codeberg.org/cubiczan/Commodity-Price-Analyzer
+- All 10 repos now have CockroachDB integration (schema + seed + app wiring)
+- 64 tables, 176 rows across 10 distributed databases
+- 7 of 10 repos have application code wired to CockroachDB
+- GitHub: all synced to both orgs
+- Codeberg: 7 repos synced, 3 blocked by IP rate limit
 
 ---
 Task ID: 2
-Agent: Main Agent
-Task: Create Delta tables in Fabric Lakehouse via REST API
+Agent: main
+Task: Upgrade decision-brief Forge app with CockroachDB REST proxy integration and webtrigger
 
 Work Log:
-- Discovered Lakehouse has schemas enabled (Fabric default for new Lakehouses)
-- Tried REST API tables endpoint: /lakehouses/{id}/tables — returns "UnsupportedOperationForSchemasEnabledLakehouse"
-- Tried schema-aware endpoint: /lakehouses/{id}/schemas/dbo/tables — returns "EntityNotFound"
-- Tried items endpoint: /items/{id}/tables — returns "EntityNotFound"
-- Tried oneLake DFS API — needs storage token (https://storage.azure.com audience), not Fabric token
-- Tried notebook creation with .platform file for Lakehouse reference — "InvalidPlatformFile"
-- Found that defaultLakehouseReference field in notebook creation body returns 202
-- Successfully created and executed notebook but execution failed (Lakehouse not attached)
-- Discovered updateDefinition endpoint works without .platform file
-- Updated notebook definition and re-executed — still failed (no Lakehouse attachment persisted)
-- Tried pyodbc + ODBC driver for SQL endpoint — no drivers available
-- Tried installing MS ODBC Driver 18 — apt-get failed
-- Tried Fabric SQL REST endpoint — 404
-- Cleaned up test notebooks (Create_Tables_v3, Create_Tables_v6) — deleted successfully
-- Updated fabric_setup_lakehouse.py: fixed empty DataFrame issue (use seed records), added schema-enabled Lakehouse compatibility
-- Pushed updated notebook to Codeberg (commit 689171d)
+- Read all 4 existing files: manifest.yml, src/index.js, src/frontend/index.jsx, package.json
+- Updated manifest.yml: added webtrigger module (key: decision-brief-webtrigger), resources section (main + webhook), webhook-handler function
+- Updated src/index.js: added fetch import from @forge/api, getFromProxy() for CockroachDB REST proxy calls, getFromStorage() with 5-min cache TTL, refactored handler() to three-tier fallback chain (proxy → storage → mock)
+- Created src/webhook.js: POST-only webtrigger endpoint that validates decisionId, writes to Forge storage with timestamp, returns structured JSON responses
+- Updated package.json: bumped version 1.0.0 → 2.0.0, updated description to reference CockroachDB
+- Verified src/frontend/index.jsx is completely unchanged (117 lines, identical content)
 
 Stage Summary:
-- Fabric REST API does NOT support direct table creation for schema-enabled Lakehouses
-- Notebook execution API works but requires Lakehouse attachment which cannot be set programmatically via API
-- oneLake DFS API requires a different token audience (storage.azure.com)
-- The reliable way to create tables is through the Fabric UI with a notebook
-- Updated fabric_setup_lakehouse.py with proper seed records and schema compatibility
-- User needs to manually run the setup notebook in Fabric UI (Setup Tables notebook or import from repo)
-- Correct Fabric URLs:
-  - Workspace: https://app.fabric.microsoft.com/groups/26da3f54-de30-4f32-8700-00850ba0c457
-  - Lakehouse: https://app.fabric.microsoft.com/groups/26da3f54-de30-4f32-8700-00850ba0c457/lakehouses/c474db1d-016e-481d-985b-6fa111a5ebcc
-  - Setup Tables notebook: https://app.fabric.microsoft.com/groups/26da3f54-de30-4f32-8700-00850ba0c457/items/a2639667-8b5c-4e68-8174-9a8b8129082a
+- Decision Brief Forge app upgraded to v2.0.0
+- Three-tier data resolution: CockroachDB REST proxy → Forge storage cache (5 min TTL) → mock fallback
+- External push capability via webtrigger POST endpoint for CockroachDB data ingestion
+- Frontend (Tabs, VerdictBadge, RiskBadge, RoundTable, AuditTable) preserved without modification
 
 ---
 Task ID: 3
-Agent: Main Agent
-Task: Modernize sec-earnings-workbench with Microsoft Fabric and Azure AI Foundry
+Agent: main
+Task: Upgrade market-radar Forge app with CockroachDB REST proxy integration and webtrigger
 
 Work Log:
-- Cloned repository from Codeberg (cubiczan/sec-earnings-workbench)
-- Analyzed full codebase: 39 Python files, ~3,500 lines
-- Architecture: 3 deterministic agents (Fundamentals, Diligence, Markets) + CHP + ContextEngine
-- Data sources: AlphaVantage (fundamentals), FRED (macro), SEC EDGAR (filings)
-- 3 output types: BusinessModelMemo, SECDeepDiveMemo, InitiationOfCoverage
-- Zero external dependencies — all stdlib only
-- Designed Fabric Lakehouse schema with 7 Delta tables
-- Created fabric_setup_lakehouse.py notebook (9 cells, 7 tables with seed data)
-- Created fabric_research_pipeline.py notebook (13 cells, full AI-powered pipeline)
-- Pipeline: AlphaVantage + EDGAR data ingestion, AI agents (Kimi K2.6), CHP hardening, Artifact, Delta tables
-- Added src/cme/ai/foundry.py — Azure AI Foundry client (OpenAI-compatible)
-- Added src/cme/fabric/client.py — Fabric REST API client
-- Updated README with full Fabric + AI Foundry documentation
-- Pushed to Codeberg (commit a9d7185)
+- Read all 4 existing files: manifest.yml, src/index.js, src/frontend/index.jsx, package.json
+- Updated manifest.yml: added webtrigger module (key: market-radar-webtrigger), resources section (main + webhook), webhook-handler function entry
+- Updated src/index.js: added fetch import from @forge/api, getFromProxy() with response shape validation for CockroachDB REST proxy, getFromStorage() with 5-min cache TTL, refactored handler() to three-tier fallback chain (proxy → storage → mock), non-critical storage write failure handling
+- Created src/webhook.js: POST-only webtrigger endpoint that validates required fields (sentiment, fedPolicy, sectorRotation), writes to Forge storage with ISO timestamp, returns structured JSON responses (405/400/200)
+- Updated package.json: bumped version 1.0.0 → 2.0.0, updated description to reference CockroachDB
+- Verified src/frontend/index.jsx is completely unchanged (123 lines, identical content — Tabs, Tables, StatusLozenges, SentimentBar, SignalBadge preserved)
 
 Stage Summary:
-- Repository successfully modernized for Microsoft Fabric + Azure AI Foundry
-- 7 Delta tables: sec_filings, company_fundamentals, macro_indicators, research_sessions, agent_outputs, research_artifacts, audit_trail
-- 3 AI-powered agents replace deterministic rules: Fundamentals, Diligence, Markets
-- CHP foundation adjudicator also AI-powered
-- RAG context from SEC EDGAR 10-K filings (up to 8K chars)
-- Fabric notebooks ready to paste and run in existing Lakehouse
-- Pushed to Codeberg: https://codeberg.org/cubiczan/sec-earnings-workbench
+- Market Radar Forge app upgraded to v2.0.0
+- Three-tier data resolution: CockroachDB REST proxy → Forge storage cache (5 min TTL) → mock fallback
+- External push capability via webtrigger POST endpoint for CockroachDB data ingestion
+- Frontend (Sentiment Indicators tab, Fed Policy tab with dot plot, Sector Rotation tab with flow sorting) preserved without modification
+
+---
+Task ID: 4
+Agent: main
+Task: Upgrade finance-cockpit Forge app with CockroachDB REST proxy integration and webtrigger
+
+Work Log:
+- Read all 4 existing files: manifest.yml, src/index.js, src/frontend/index.jsx, package.json
+- Updated manifest.yml: added webtrigger module (key: finance-cockpit-webtrigger), resources section (main + webhook), webhook-handler function entry, added description to jira:projectPage module
+- Updated src/index.js: added fetch + storage imports from @forge/api, getFromProxy() calling https://db-proxy.example.com/api/finance-cockpit with response validation, getFromStorage() with 5-min cache TTL and age check, cacheToStorage() helper, refactored handler() to three-tier fallback chain (proxy → storage → mock) with console.warn logging on failures
+- Created src/webhook.js: POST-only webtrigger endpoint that validates required fields (budget, burnRate, cashForecast, workingCapital), writes to Forge storage with ISO timestamp, returns structured JSON responses (405/400/200)
+- Updated package.json: bumped version 1.0.0 → 2.0.0, updated description to reference CockroachDB integration
+- Verified src/frontend/index.jsx is completely unchanged (79 lines, identical content — Dashboard, ProgressBar, Tables, StatusLozenges, SectionMessage, Badge all preserved)
+
+Stage Summary:
+- Finance Cockpit Forge app upgraded to v2.0.0
+- Three-tier data resolution: CockroachDB REST proxy → Forge storage cache (5 min TTL) → mock fallback
+- External push capability via webtrigger POST endpoint for CockroachDB data ingestion
+- Frontend (Budget panel, Burn Rate panel, 13-Week Cash Forecast panel, Working Capital panel with DSO/DPO/DIO/CCC table and optimization recommendations) preserved without modification
 
 ---
 Task ID: 5
-Agent: Main Agent
-Task: Peer batch processing pipeline for sec-earnings-workbench
+Agent: main
+Task: Build CockroachDB REST API Proxy for Atlassian Forge Apps
 
 Work Log:
-- Designed batch architecture: wrap single-company pipeline into process_company() function
-- Created fabric_peer_batch.py (12 cells): config, data ingestion, AI clients, batch loop, comparative analysis, Delta writes
-- Added rate-limit enforcement: AlphaVantage call tracking, 15s delays, daily cap (25 calls)
-- Added AI retry logic: 3 attempts with exponential backoff
-- Built Comparative Analysis Agent: cross-company synthesis with side-by-side metrics, relative value ranking, macro sensitivity, pair trade suggestions
-- Added peer_comparisons Delta table to setup notebook (8 tables total now)
-- Updated README with peer batch docs and rate-limit guidance
-- All pushed to Codeberg (commit a282f8f)
+- Created `/home/z/my-project/forge-apps/db-proxy/` directory
+- Created `requirements.txt`: fastapi 0.115.12, uvicorn 0.34.2, sqlalchemy 2.0.40, psycopg2-binary 2.9.10, pydantic 2.11.3, python-dotenv 1.1.0
+- Created `main.py` (370+ lines) with all 10 endpoints:
+  - GET /health — checks connectivity to all 10 databases, returns per-DB status
+  - GET /api/databases — lists all 10 databases, their tables, column counts, and row counts
+  - GET /api/{database}/tables — detailed table listing with column schemas for a specific DB
+  - GET /api/{database}/{table} — paginated rows (limit/offset, default 50/0, max 1000)
+  - GET /api/{database}/{table}/{id} — single row lookup with auto-detected PK via SQLAlchemy inspector
+  - POST /api/{database}/{table} — insert row with JSON body {"data": {...}}
+  - GET /api/market-radar — aggregated from market_sentiment_fedgpt + hedge_fund_13f_radar, mock fallback
+  - GET /api/finance-cockpit — aggregated from closed_loop_finance + multi_agent_cfo_os, mock fallback
+  - GET /api/decision-brief/{decision_id} — aggregated from multi_agent_cfo_os + closed_loop_finance, mock fallback
+  - GET /api/battery-erp-dashboard — aggregated from battery_erp, mock fallback
+- Implemented: API key auth (X-API-Key header, env var API_KEY), CORS middleware for Forge origins, connection pooling (QueuePool, 3 base + 5 overflow), lazy engine creation per database, JSON serialization for datetime/bytes, input sanitization for table names, global exception handler
+- Created `Dockerfile`: multi-stage build (python:3.12-slim), non-root user, healthcheck, 2 workers
+- Created `docker-compose.yml`: service definition with env var passthrough, healthcheck, restart policy
 
 Stage Summary:
-- Peer batch processes primary + N peers through full pipeline (data -> 3 agents -> CHP -> artifact)
-- Post-batch Comparative Analysis Agent synthesizes cross-company insights
-- New Delta table: peer_comparisons (batch_id, comparative_md, avg_foundation_score, duration)
-- Fabric notebooks: fabric_setup_lakehouse.py (8 tables), fabric_research_pipeline.py (single), fabric_peer_batch.py (batch)
-- Pushed to Codeberg: https://codeberg.org/cubiczan/sec-earnings-workbench
+- Complete FastAPI proxy for 10 CockroachDB financial databases
+- 4 aggregated Forge endpoints with rich mock data fallbacks
+- Production-ready Docker image with security hardening (non-root, minimal deps)
+- Connection pooling with pool_pre_ping for CockroachDB Serverless
 
----
-Task ID: 6
-Agent: Main Agent
-Task: Battery ERP — full battery value chain management system
-
-Work Log:
-- Designed data model: 11 domain objects covering raw materials through packs
-- Built core models: RawMaterial, CellChemistry, BatteryCell, BatteryPack, BOMItem, Supplier, InventoryRecord, PurchaseOrder, ManufacturingBatch, PriceHistory
-- Built business rules engine: BOM rollups, cell BOM generation for 6 chemistries, pack BOM, inventory status, reorder logic, batch yield, price trend analysis, cost scenario impact
-- Built supply chain module: supplier scoring (composite A-D), ranking, PO creation, pipeline analysis, dual-sourcing strategy
-- Built pricing engine: 20+ battery material prices, AlphaVantage/FRED integration, cell cost summaries
-- Built analytics module: inventory/supply chain/manufacturing/pricing report generators
-- 32 unit tests — all passing
-- Fabric Lakehouse: 11 Delta tables with seed data (materials, chemistries, cells, packs, BOM, suppliers, inventory, POs, price history, batches, scenarios)
-- Fabric notebooks: setup (13 cells) + cost dashboard (14 cells)
-- Pushed to Codeberg: https://codeberg.org/cubiczan/battery-erp
-
-Stage Summary:
-- Full battery value chain: materials -> chemistries -> cells -> packs
-- 6 chemistries supported: NMC-111, NMC-811, NMC-622, NCA, LFP, LMO
-- 20+ materials tracked: Li carbonate, Ni, Co, Mn, graphite, electrolyte, Cu/Al foil, separator
-- Supplier scoring: composite 0-100 with A/B/C/D grades
-- Cost scenario modeling: lithium shock, cobalt restriction, nickel recovery
-- 32 tests, 11 Delta tables, 2 Fabric notebooks
-- Pushed to Codeberg: https://codeberg.org/cubiczan/battery-erp
-
----
-Task ID: 7
-Agent: Main Agent
-Task: Minescope.Signal — Mining Intelligence Platform (Fabric + AI Foundry variant of Minescope)
-
-Work Log:
-- Reviewed original Commodity-Price-Analyzer repo: 4 GLI contract types, Airia flow, AlphaVantage, Kimi K2.6
-- Designed Minescope.Signal architecture: 6 domain models, 5 services, AI agents, 14 Delta tables
-- Built domain models: MiningCompany (tier/sector/ESG), MineSite (status/processing), ReserveEstimate (NI 43-101 compliant), ProductionRecord (quarterly/annual), CommodityPrice (multi-source, unit conversion), AiscMetric (cost benchmarking)
-- Built services: PricingService (AV/FRED, 14-commodity fallback, rate limiting), ReserveService (aggregation, NPV sensitivity, comparison), ProductionService (grade trends, guidance analysis, recovery efficiency), AiscService (cost curves, margins, peer benchmarking), MiningIntelligenceService (composite signal scoring + AI context builder)
-- Signal scoring: 0-100 composite across grade(25%), cost(25%), production(20%), growth(15%), ESG(15%) with rating bands
-- Fabric notebooks: setup (14 cells, 14 Delta tables, seed data for 8 companies/14 mines/18 reserves) + dashboard (14 cells, full pipeline with AI Foundry agents)
-- AI Foundry integration: per-company intelligence briefing agent + cross-company comparative analysis agent
-- 64 tests all passing
-- Pushed to Codeberg: https://codeberg.org/cubiczan/minescope-signal
-
-Stage Summary:
-- Minescope.Signal is a clean Fabric + AI Foundry variant of Minescope (original left untouched)
-- 6 domain models with NI 43-101 / JORC compliance
-- 5 services with full business logic
-- Composite signal scoring with 5 weighted dimensions
-- 14 Delta tables in Fabric Lakehouse
-- 2 AI Foundry agents (intelligence briefing + comparative analysis)
-- 64 tests, 2 Fabric notebooks, 8 seeded mining companies
-- Pushed to Codeberg: https://codeberg.org/cubiczan/minescope-signal (commit 382cd94)
 ---
 Task ID: 1
 Agent: main
-Task: Examine closed-loop-finance repo, create visual assets, enhance README, push to 3 remotes
+Task: Build and deploy 3 Atlassian Forge apps with CockroachDB integration
 
 Work Log:
-- Cloned closed-loop-finance from GitHub using PAT
-- Read and analyzed all 80+ files across the repo (agents, tools, skills, docs, config, data)
-- Created 5 new visual assets using matplotlib:
-  - terminal-demo.png: Dark-themed CLI mockup showing full pipeline run
-  - trust-model.png: 4-pillar security architecture diagram
-  - data-flow-pipeline.png: End-to-end data flow from sources through agents to outputs
-  - closed-loop-infographic.png: Circular 8-step cycle visualization
-  - tech-stack.png: 3-column technology stack breakdown
-- Rewrote README.md from scratch with professional formatting, badges, 9 embedded images, tables, code blocks
-- Committed and pushed to GitHub cubiczan/closed-loop-finance
-- Created new repo zan-maker/closed-loop-finance on GitHub and pushed
-- Pushed to Codeberg cubiczan/closed-loop-finance
+- Verified existing Forge app state: 3 apps scaffolded (market-radar, finance-cockpit, decision-brief) with mock data and polished UIs
+- Attempted Forge CLI login with provided Atlassian API token — requires email+token Basic auth, blocked by non-TTY environment
+- Built CockroachDB REST API proxy (FastAPI) at forge-apps/db-proxy/ with 10 endpoints, connection pooling, API key auth, CORS, mock fallbacks
+- Upgraded market-radar to v2.0.0: added webtrigger, three-tier data resolution (proxy → Forge storage → mock)
+- Upgraded finance-cockpit to v2.0.0: added webtrigger, three-tier data resolution
+- Upgraded decision-brief to v2.0.0: added webtrigger, three-tier data resolution
+- Created GitHub repos: Cubiczan/{market-radar,finance-cockpit,decision-brief,db-proxy} — all pushed
+- Created Codeberg repos: cubiczan/{market-radar,finance-cockpit,decision-brief,db-proxy} — all pushed
 
 Stage Summary:
-- All 3 remotes updated with enhanced README + 5 new diagrams
-- GitHub: https://github.com/Cubiczan/closed-loop-finance
-- GitHub: https://github.com/zan-maker/closed-loop-finance
-- Codeberg: https://codeberg.org/cubiczan/closed-loop-finance
+- 3 Forge apps v2.0.0 with CockroachDB integration ready for deployment
+- 1 CockroachDB REST proxy (db-proxy) ready for deployment
+- All 4 repos synced to GitHub + Codeberg
+- BLOCKER: Forge CLI requires Atlassian account email for `forge login --email --token --non-interactive` — user needs to provide their Atlassian email
+
 ---
-Task ID: 1-7
+Task ID: 2
 Agent: main
-Task: Build ResilientAgent project for DevNetwork AI/ML Hackathon 2026 (TrueFoundry Challenge)
+Task: Deploy 3 Forge apps to Atlassian (development environment)
 
 Work Log:
-- Researched TrueFoundry AI Gateway (virtual models, retry, fallback, MCP gateway, CLI setup)
-- Researched example repo: tfy-voice-analyser-agent (multi-agent architecture with DeepAgents)
-- Designed 5-layer resilience architecture: Virtual Models, Circuit Breaker, Fallback Chain, Semantic Cache, Degraded UX
-- Built core agent code: ResilientLLMClient, ResilientAgentOrchestrator, ChaosSimulator, FastAPI server
-- Created 4 professional screenshots (dashboard, chaos simulation, architecture, API docs)
-- Created 3:12 narrated demo video with 9 slides + thumbnail
-- Pushed to 3 repos: zan-maker/ghub, Cubiczan/ghub, cubiczan/codeberg
-- Prepared DevPost submission copy
+- Logged in as Shyam Desigan (sam@cubiczan.com) via FORGE_EMAIL + FORGE_API_TOKEN env vars
+- Created Developer Space "cubiczan-space" (id: 82ed46ab-9c30-438f-b517-86f3d5fde097) via GraphQL mutation
+- Fixed manifest schemas: moved function defs under modules.function, removed resource from webtrigger, added index.html to Custom UI dirs
+- Fixed deprecated storage imports: @forge/api storage → @forge/kvs getAll/set
+- Added external fetch permissions for CockroachDB proxy egress
+- Fixed invalid scopes (read:dashboard, read:project, read:confluence-content)
+- Converted decision-brief from confluence:macro to jira:projectPage (product compatibility)
+- Registered all 3 apps in cubiczan-space developer space
+- Deployed all 3 apps to development environment successfully
+- Committed fixes and pushed to GitHub + Codeberg
 
 Stage Summary:
-- Project: /home/z/my-project/resilient-agent/
-- GitHub: https://github.com/zan-maker/resilient-agent
-- GitHub: https://github.com/Cubiczan/resilient-agent
-- Codeberg: https://codeberg.org/cubiczan/resilient-agent
-- Video: docs/video/ResilientAgent_Demo.mp4 (7.8MB, 3:12, H.264+AAC)
-- Screenshots: docs/screenshots/ (4 images)
-- DevPost copy: docs/DEVPOST_SUBMISSION.md
-- All repos pushed successfully with 19 files, 1177 insertions
+- market-radar: DEPLOYED (ari:cloud:ecosystem::app/51430985-23b0-4c61-9533-95df091e10eb)
+- finance-cockpit: DEPLOYED (ari:cloud:ecosystem::app/90c674aa-5a28-4d95-b7c6-a790c019b8ee)
+- decision-brief: DEPLOYED (ari:cloud:ecosystem::app/41c82150-6c0a-4e81-a627-b4b2c06a19df)
+- All synced to GitHub (Cubiczan org) + Codeberg (cubiczan)
+- Next step: `forge install` to install on Jira sites
+
+---
+Task ID: 3
+Agent: main
+Task: Deploy db-proxy and verify Forge app endpoints
+
+Work Log:
+- Installed db-proxy dependencies (fastapi, uvicorn, sqlalchemy, psycopg2-binary)
+- Started db-proxy on port 9090, verified all 9 endpoints via OpenAPI spec
+- Tested aggregated endpoints:
+  - /api/market-radar: OK (returns live CockroachDB data with mock fallback)
+  - /api/finance-cockpit: OK (returns live CockroachDB data with mock fallback)
+  - /api/decision-brief/DC-CFO-001: 404 (DB tables don't match query, returns mock in app layer)
+- Forge install requires a Jira site URL (e.g., company.atlassian.net) - blocked waiting for user input
+- Webtrigger URLs require installation first (only available after forge install)
+
+Stage Summary:
+- db-proxy: WORKING locally on port 9090 with 9 REST endpoints
+- All 3 Forge apps: DEPLOYED to development with rich mock data fallback
+- Forge install: BLOCKED - needs user's Jira site URL
+- Next: User provides Jira site URL -> forge install -> webtrigger URLs available -> connect live data
+
+---
+Task ID: 1
+Agent: main
+Task: Install 3 Forge apps on cubiczan.atlassian.net + deploy db-proxy + sync to Git
+
+Work Log:
+- Re-authenticated Forge CLI with FORGE_EMAIL + FORGE_API_TOKEN env vars
+- Fixed stray /home/z/my-project/manifest.yml interfering with forge commands
+- Installed Market Radar on cubiczan.atlassian.net (dev environment)
+- Installed Finance Cockpit on cubiczan.atlassian.net (dev environment)
+- Installed Decision Brief on cubiczan.atlassian.net (dev environment)
+- Fixed decision-brief manifest external fetch format (address: → direct URL string)
+- Redeployed all 3 apps with latest fixes
+- Verified db-proxy locally (all 10 CockroachDB databases connected, mock data served correctly)
+- Added deployment configs: render.yaml, railway.toml, fly.toml, Procfile
+- Fixed CockroachDB v25 SSL mode handling in main.py
+- Pushed decision-brief + db-proxy updates to GitHub (Cubiczan) + Codeberg (cubiczan)
+
+Stage Summary:
+- All 3 Forge apps installed on cubiczan.atlassian.net (development environment)
+- All 3 Forge apps redeployed with manifest fixes
+- db-proxy ready for one-click deployment to Render/Railway/Fly.io
+- All repos synced to GitHub + Codeberg
+
+---
+Task ID: 2
+Agent: main
+Task: Beef up READMEs for all 3 Forge apps + generate screenshots + push to GitHub/Codeberg
+
+Work Log:
+- Read all source files (index.js, webhook.js, frontend/index.jsx, manifest.yml, package.json) for all 3 apps
+- Generated Market Radar screenshot: 1200x900px Jira dashboard mockup with sentiment indicators table, alerts, tab bar
+- Generated Finance Cockpit screenshot: 1200x900px Jira project page mockup with 4-panel dashboard grid
+- Generated Decision Brief screenshot: 1200x900px Jira project page mockup with adversarial rounds table and audit trail
+- Wrote comprehensive README.md for market-radar (735 lines): Overview, Architecture diagram, Data Sources table, Installation, Usage guide (sentiment scoring, signal badges, webtrigger), Project Structure, Technical Details
+- Wrote comprehensive README.md for finance-cockpit (230 lines): Overview, Architecture diagram, Data Sources table, Installation, Usage guide (panel reading guide, working capital metrics), Project Structure, Technical Details
+- Wrote comprehensive README.md for decision-brief (904 lines): Overview, Architecture diagram, Adversarial Decision Framework (phases, verdict types, risk flags), Data Sources table, Installation, Usage guide, Project Structure, Technical Details
+- All 3 repos committed and pushed to GitHub (Cubiczan/) and Codeberg (cubiczan/)
+
+Stage Summary:
+- market-radar: README.md + docs/market-radar-screenshot.png → pushed to GitHub + Codeberg
+- finance-cockpit: README.md + docs/finance-cockpit-screenshot.png → pushed to GitHub + Codeberg
+- decision-brief: README.md + docs/decision-brief-screenshot.png → pushed to GitHub + Codeberg

@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://developer.atlassian.com/platform/forge/build-an-app-compatible-with-confluence-and-jira",
+    "name": "Build an app compatible with Confluence and Jira",
+    "snippet": "This tutorial will walk you through creating an app that is compatible with Confluence and Jira. This app uses the Confluence macro and Jira ...",
+    "host_name": "developer.atlassian.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://developer.atlassian.com/cloud/jira/software/forge",
+    "name": "Forge - Developer, Atlassian",
+    "snippet": "Forge is Atlassian's new development platform for building Jira and Confluence Cloud apps. If you're not familiar with Forge, see About Forge in the Forge ...",
+    "host_name": "developer.atlassian.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.atlassian.com/forums/App-Central-articles/What-You-Need-to-Know-About-Atlassian-Forge-and-How-It-Helps-You/ba-p/3161401",
+    "name": "What You Need to Know About Atlassian Forge and Ho",
+    "snippet": "Atlassian Forge is a cloud platform that lets you build apps for Jira, Confluence, and other Atlassian products. It is replacing Connect and ...",
+    "host_name": "community.atlassian.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://medium.com/@domskamariia/atlassian-forge-what-jira-users-need-to-know-6371e63959fd",
+    "name": "Atlassian Forge: What Jira Users Need to Know | by Domska Mariia",
+    "snippet": "Atlassian Forge is a cloud platform for building apps for Jira, Confluence, and other Atlassian products. It is taking over from Connect and is ...",
+    "host_name": "medium.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://community.developer.atlassian.com/t/2026-point-based-rate-limits/97828",
+    "name": "2026 point-based rate limits - The Atlassian Developer Community",
+    "snippet": "We are one of the largest consumers of Jira and Confluence REST APIs and have previously discussed performance improvements with Atlassian.",
+    "host_name": "community.developer.atlassian.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=IPX1ZNEpuAo",
+    "name": "Build Custom Jira & Confluence Apps – Lars Klint | Atlassian Team '26",
+    "snippet": "What if building your first Forge app was easier than you think? In this interview at Atlassian Team '26, Lars Klint, Principal Developer ...",
+    "host_name": "www.youtube.com",
+    "rank": 5,
+    "date": "May 9, 2026",
+    "favicon": ""
+  },
+  {
+    "url": "https://forge-apps.com/blog/type-safe-jira-and-confluence-api-call-for-atlassian-forge",
+    "name": "Type-safe Jira and Confluence API calls for Atlassian Forge",
+    "snippet": "This tool generates TypeScript client code for Atlassian APIs, providing type-safe access to API responses.",
+    "host_name": "forge-apps.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.atlas-bench.com/blog/forge-platform-updates-every-atlassian-app-developer-should-track-in-2025",
+    "name": "Forge Platform Updates Every Atlassian App Developer Should",
+    "snippet": "Forge is now the default path to building great Atlassian apps across Jira and Confluence, marrying speed of delivery with platform level security and data ...",
+    "host_name": "www.atlas-bench.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://confluence.atlassian.com/cloud/blog/2026/02/atlassian-cloud-changes-feb-16-to-feb-23-2026",
+    "name": "Atlassian Cloud changes Feb 16 to Feb 23, 2026",
+    "snippet": "Cloud-to-cloud data transfer is now available for Jira Product Discovery spaces, expanding its migration capabilities. Org admins can transfer ...",
+    "host_name": "confluence.atlassian.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=mWquBjXnYm8",
+    "name": "Migrating our largest Confluence app to Forge | Atlas Camp 2025",
+    "snippet": "Comments ; Say goodbye to clunky UI, Build sleek apps with ease with UI Kit | Atlas Camp 2025. Atlassian Developer · 361 views ; Atlas Camp 2025 | ...",
+    "host_name": "www.youtube.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]
