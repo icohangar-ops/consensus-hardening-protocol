@@ -53,3 +53,7 @@ Thumbs.db
 .zscripts/
 scripts/dev.pid
 upload/
+
+# CHP session artifacts (local only)
+.chp_registry.json
+.chp/sessions/

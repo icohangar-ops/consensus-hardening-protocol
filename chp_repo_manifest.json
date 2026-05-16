@@ -1,0 +1,295 @@
+{
+  "$schema": "chp-manifest-v1",
+  "version": "1.0.0",
+  "description": "CHP Hardening Manifest — Cubiczan Repository Portfolio",
+  "generated": "2026-06-18",
+  "chp_version": "cognitive-mesh-orchestrator 0.1.0",
+  "repos": [
+    {
+      "name": "autonomous-business-os",
+      "path": "autonomous-business-os",
+      "description": "Finance/AI — Autonomous business operating system with multi-agent orchestration",
+      "languages": ["Python"],
+      "domain": "finance_cfo",
+      "skip": false
+    },
+    {
+      "name": "battery-erp",
+      "path": "battery-erp",
+      "description": "Mining/Supply Chain — Battery mineral ERP with supply chain analytics",
+      "languages": ["Python"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    },
+    {
+      "name": "closed-loop-finance",
+      "path": "closed-loop-finance",
+      "description": "Finance — Closed-loop finance with monthly close, FP&A, and audit trail",
+      "languages": ["Python"],
+      "domain": "finance_cfo",
+      "skip": false
+    },
+    {
+      "name": "Commodity-Price-Analyzer",
+      "path": "Commodity-Price-Analyzer",
+      "description": "Mining/Finance — Commodity price analysis with lead generation",
+      "languages": ["Python"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    },
+    {
+      "name": "courtvision-ai",
+      "path": "courtvision-ai",
+      "description": "Blockchain/DeFi — NBA prediction market with Solidity contracts",
+      "languages": ["Python", "TypeScript", "Solidity"],
+      "domain": "blockchain_defi",
+      "skip": false
+    },
+    {
+      "name": "FinFlowRL",
+      "path": "FinFlowRL",
+      "description": "Finance/Trading — Reinforcement learning for financial flow trading",
+      "languages": ["Python"],
+      "domain": "finance_trading",
+      "skip": false
+    },
+    {
+      "name": "greenverify-ai",
+      "path": "greenverify-ai",
+      "description": "Blockchain/DeFi — Green carbon credit verification with Rust contracts",
+      "languages": ["Python", "Rust", "TypeScript"],
+      "domain": "blockchain_defi",
+      "skip": false
+    },
+    {
+      "name": "resilient-agent",
+      "path": "resilient-agent",
+      "description": "AI/Agents — Resilient AI agent framework with chaos simulation",
+      "languages": ["Python"],
+      "domain": "ai_agents",
+      "skip": false
+    },
+    {
+      "name": "sec-earnings-workbench",
+      "path": "sec-earnings-workbench",
+      "description": "Finance — SEC earnings analysis workbench",
+      "languages": ["Python"],
+      "domain": "finance_cfo",
+      "skip": false
+    },
+    {
+      "name": "market-radar",
+      "path": "forge-apps/market-radar",
+      "description": "Finance/Tools — Market radar dashboard for commodity tracking",
+      "languages": ["JavaScript"],
+      "domain": "tools",
+      "skip": false
+    },
+    {
+      "name": "finance-cockpit",
+      "path": "forge-apps/finance-cockpit",
+      "description": "Finance/Tools — Finance cockpit dashboard for financial oversight",
+      "languages": ["JavaScript"],
+      "domain": "tools",
+      "skip": false
+    },
+    {
+      "name": "decision-brief",
+      "path": "forge-apps/decision-brief",
+      "description": "Finance/Tools — Decision brief generation tool",
+      "languages": ["JavaScript"],
+      "domain": "tools",
+      "skip": false
+    },
+    {
+      "name": "consensus-hardening-protocol",
+      "path": "mineral-review/consensus-hardening-protocol",
+      "description": "AI/CHP — The CHP protocol itself (SKIP - this IS CHP)",
+      "languages": ["Python"],
+      "domain": "ai_agents",
+      "skip": true,
+      "skip_reason": "This repository IS the CHP protocol"
+    },
+    {
+      "name": "convergence",
+      "path": "mineral-review/convergence",
+      "description": "Finance/AI — Convergence tower for cross-repo workstream orchestration",
+      "languages": ["Python", "TypeScript"],
+      "domain": "finance_cfo",
+      "skip": false
+    },
+    {
+      "name": "chainsight-ai",
+      "path": "mineral-review/chainsight-ai",
+      "description": "Blockchain/AI — Chain analysis AI for blockchain intelligence",
+      "languages": ["Python", "TypeScript"],
+      "domain": "blockchain_defi",
+      "skip": false
+    },
+    {
+      "name": "Critmin-Oracle",
+      "path": "mineral-review/Critmin-Oracle",
+      "description": "Blockchain/Mining — Critical mineral oracle with Solidity contracts",
+      "languages": ["Python", "TypeScript", "Solidity"],
+      "domain": "blockchain_mining",
+      "skip": false
+    },
+    {
+      "name": "Genswarm-contract",
+      "path": "mineral-review/Genswarm-contract",
+      "description": "Blockchain — GenLayer AI smart contracts for swarm intelligence",
+      "languages": ["Python", "TypeScript"],
+      "domain": "blockchain_defi",
+      "skip": false
+    },
+    {
+      "name": "Stellar-critical-metal-traceability",
+      "path": "mineral-review/Stellar-critical-metal-traceability",
+      "description": "Blockchain/Mining — Stellar blockchain critical metal traceability",
+      "languages": ["TypeScript"],
+      "domain": "blockchain_mining",
+      "skip": false
+    },
+    {
+      "name": "Swarmfi",
+      "path": "mineral-review/Swarmfi",
+      "description": "Blockchain/DeFi — DeFi swarm finance with vault management",
+      "languages": ["Rust", "TypeScript", "Python"],
+      "domain": "blockchain_defi",
+      "skip": false
+    },
+    {
+      "name": "metal-price-agent",
+      "path": "mineral-review/metal-price-agent",
+      "description": "Mining/Finance — Metal price monitoring agent with AI analysis",
+      "languages": ["Python", "TypeScript"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    },
+    {
+      "name": "scope-vantage",
+      "path": "mineral-review/scope-vantage",
+      "description": "Mining/Supply Chain — Scope mining intelligence vantage platform",
+      "languages": ["Python"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    },
+    {
+      "name": "scope-glacier",
+      "path": "mineral-review/scope-glacier",
+      "description": "Mining/Energy — Scope glacier energy monitoring for mining operations",
+      "languages": ["Python"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    },
+    {
+      "name": "scope-sentinel",
+      "path": "mineral-review/scope-sentinel",
+      "description": "Finance/REIT — REIT financial sentinel with SEC/FRED integration",
+      "languages": ["Python"],
+      "domain": "finance_cfo",
+      "skip": false
+    },
+    {
+      "name": "minescope-signal",
+      "path": "minescope-signal",
+      "description": "Mining/Finance — Minescope signal processing for mining intelligence",
+      "languages": ["Python"],
+      "domain": "mining_supply_chain",
+      "skip": false
+    }
+  ],
+  "domain_config": {
+    "finance_cfo": {
+      "label": "Finance (CFO Accuracy)",
+      "foundation": 100,
+      "cfo_accuracy": true,
+      "worth_it": true,
+      "adversarial_challenges": [
+        "What financial reporting errors could this decision introduce? Consider GAAP/IFRS compliance risks.",
+        "How would an incorrect revenue recognition assumption cascade through the financial statements?",
+        "What audit trail gaps exist that could trigger a material weakness finding?",
+        "If the CFO accuracy floor is breached, what is the blast radius for stakeholder trust?",
+        "What is the false precision risk — are we treating estimates as facts?"
+      ]
+    },
+    "finance_trading": {
+      "label": "Finance (Trading)",
+      "foundation": 85,
+      "cfo_accuracy": true,
+      "worth_it": true,
+      "adversarial_challenges": [
+        "What market regime shifts would invalidate the trading model assumptions?",
+        "How does this strategy perform under tail risk scenarios (black swan events)?",
+        "What is the maximum drawdown before position limits are breached?",
+        "Are there hidden correlations between positions that create concentrated risk?",
+        "What slippage and latency assumptions are embedded, and what if they're wrong?"
+      ]
+    },
+    "blockchain_defi": {
+      "label": "Blockchain / DeFi",
+      "foundation": 85,
+      "cfo_accuracy": false,
+      "worth_it": true,
+      "adversarial_challenges": [
+        "What smart contract vulnerability vectors exist (reentrancy, flash loan, oracle manipulation)?",
+        "How does transaction finality risk affect the decision? What if a chain reorg occurs?",
+        "What governance attack vectors exist if protocol parameters change post-deployment?",
+        "What is the immutable transaction risk — once on-chain, this cannot be reversed?",
+        "How does MEV extraction risk affect the expected outcome of this decision?"
+      ]
+    },
+    "blockchain_mining": {
+      "label": "Blockchain / Mining",
+      "foundation": 85,
+      "cfo_accuracy": false,
+      "worth_it": true,
+      "adversarial_challenges": [
+        "What oracle manipulation risks exist for mineral price feeds on-chain?",
+        "How does chain liveness/finality affect real-time mining operations?",
+        "What are the regulatory risks of traceability data stored on public ledgers?",
+        "What happens if the critical mineral supply chain is disrupted mid-transaction?",
+        "Are there jurisdictional conflicts between blockchain immutability and mining regulations?"
+      ]
+    },
+    "ai_agents": {
+      "label": "AI / Agents",
+      "foundation": 70,
+      "cfo_accuracy": false,
+      "worth_it": false,
+      "adversarial_challenges": [
+        "What failure modes exist in the agent orchestration that could produce silent incorrect outputs?",
+        "How does context window limitation affect the quality of multi-round decisions?",
+        "What is the prompt injection or adversarial input risk for the agent system?",
+        "How does model drift affect long-running agent processes?",
+        "What is the blast radius if an agent makes an autonomous decision with bad data?"
+      ]
+    },
+    "mining_supply_chain": {
+      "label": "Mining / Supply Chain",
+      "foundation": 75,
+      "cfo_accuracy": false,
+      "worth_it": true,
+      "adversarial_challenges": [
+        "What geopolitical disruptions could invalidate supply chain assumptions?",
+        "How does commodity price volatility affect the economic viability of the decision?",
+        "What ESG compliance risks are embedded in the supply chain data?",
+        "Are there single points of failure in the mineral sourcing or logistics chain?",
+        "How would a force majeure event cascade through the supply chain model?"
+      ]
+    },
+    "tools": {
+      "label": "Tools / Utilities",
+      "foundation": 70,
+      "cfo_accuracy": false,
+      "worth_it": false,
+      "adversarial_challenges": [
+        "What edge cases in the input data could produce misleading tool output?",
+        "Is the tool's output being used for decisions beyond its intended scope?",
+        "What happens if the tool's dependencies (APIs, data sources) become unavailable?",
+        "Are there accessibility or usability gaps that could lead to misinterpretation?",
+        "What is the maintenance burden and technical debt risk for this tool?"
+      ]
+    }
+  }
+}

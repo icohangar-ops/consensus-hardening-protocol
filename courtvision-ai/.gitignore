@@ -19,3 +19,7 @@ dashboard/.next/
 .eth-dotenv/
 coverage/
 htmlcov/
+
+# CHP session artifacts (local only)
+.chp_registry.json
+.chp/sessions/
