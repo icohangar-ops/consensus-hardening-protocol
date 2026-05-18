@@ -379,3 +379,43 @@ Stage Summary:
 - 22 unit tests, all passing
 - Full workspace: 335/335 tests pass (excl. pyo3 which needs Python env)
 - Pushed: cubiczan-ml commit 3dc1541, critmin-oracle commit ac495ed
+---
+Task ID: 3
+Agent: main
+Task: Rust port of consensus-hardening-protocol (CHP) #3 on Tier 1
+
+Work Log:
+- Found CHP crate already scaffolded at crates/consensus-hardening-protocol/ (2,604 LOC, 15 modules, 0 tests)
+- Fixed 8 compilation errors: duplicate SessionStatus enum, missing #[default] attrs, SessionStatus. vs SessionStatus::, borrow-after-move on devil_round, type inference on .into(), field name prior_lock_versions vs prior_versions, missing Default derive on ItemAgreement
+- Fixed 1 test failure: parity test expected MINOR for FRONTIER vs MID (gap=2), corrected to test sonnet vs haiku (gap=1) for MINOR, added SIGNIFICANT gap test
+- Added #[default] on Phase::Foundation and SessionStatus::EXPLORING enums
+- All 68 tests passing, 403 workspace total
+
+Stage Summary:
+- CHP crate: 15 modules, 2,604 LOC, 68 tests
+- Workspace total: 403/403 tests passing
+- Pushed to GitHub (Cubiczan/cubiczan-ml + Cubiczan/consensus-hardening-protocol) and Codeberg (cubiczan/cubiczan-ml + cubiczan/consensus-hardening-protocol)
+- READMEs updated in both repos
+
+---
+Task ID: 4
+Agent: main
+Task: Rust port of swarmfi-perps #4 on Tier 1
+
+Work Log:
+- Analyzed Python source — discovered it's a Next.js/TypeScript app, not Python (skills/scripts are Python but core is TypeScript)
+- Read all 4 core files: types.ts (86 LOC), agents.ts (827 LOC), consensus.ts (235 LOC), index.ts (310 LOC)
+- Created crates/swarmfi-perps/ with 7 modules: types, math, agents, consensus, pipeline, dydx, lib + main binary
+- Ported all 9 agents as pure functions: funding, momentum, volatility, volume, orderbook, liquidation, mean_reversion, trend, sentiment (meta-agent)
+- Ported adversarial weighted consensus algorithm with stigmergy board
+- Ported dYdX v4 Indexer HTTP client with response types and live data builder
+- Added mock data generators for testing (normal + high volatility)
+- Fixed compilation errors: reqwest blocking feature, assertion macro typos, module path in test, HistoricalFundingData typo
+- All 58 tests passing, 461 workspace total
+
+Stage Summary:
+- swarmfi-perps crate: 7 modules, 2,461 LOC, 58 tests
+- Workspace total: 461/461 tests passing, 10 crates
+- Pushed to GitHub (Cubiczan/cubiczan-ml + zan-maker/swarmfi-perps)
+- Codeberg push pending (429 rate limit)
+- READMEs updated in both repos
