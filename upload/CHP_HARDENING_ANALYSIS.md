@@ -1,16 +1,16 @@
 # CHP Hardening Analysis
-## Leveraging TLP v2.2.4 Mechanics — VCL-Free, CHP-Branded
+## Leveraging CHP Hardening Spec Mechanics
 
 **Prepared for:** Sam Desigan / Cubiczan  
 **Date:** 2026-05-18  
-**Scope:** Gap analysis between the current Consensus Hardening Protocol repo and TLP v2.2.4, with actionable hardening recommendations  
-**Constraint:** All VCL (Value Constraint Ladder) references removed. CHP remains the code brand throughout.
+**Scope:** Gap analysis between the current Consensus Hardening Protocol repo and CHP hardening spec, with actionable hardening recommendations  
+**Constraint:** All CAT references removed. CHP remains the code brand throughout.
 
 ---
 
 ## 1. Executive Summary
 
-CHP already implements the structural backbone of TLP — R0 gate, foundation attack, adversarial disclosure, EXPLORING → PROVISIONAL_LOCK → LOCKED state machine, payload envelopes, third-party validation, and council spawn primitives. What it's missing are the **enforcement teeth** that make TLP a hardened protocol rather than a suggested workflow. The gaps fall into five categories:
+CHP already implements the structural backbone of CHP — R0 gate, foundation attack, adversarial disclosure, EXPLORING → PROVISIONAL_LOCK → LOCKED state machine, payload envelopes, third-party validation, and council spawn primitives. What it's missing are the **enforcement teeth** that make CHP a hardened protocol rather than a suggested workflow. The gaps fall into five categories:
 
 | Gap Category | Severity | Effort |
 |---|---|---|
@@ -20,13 +20,13 @@ CHP already implements the structural backbone of TLP — R0 gate, foundation at
 | **Model parity gate** — halt on significant asymmetry | Medium | Low |
 | **Blind spot & vulnerability tracking** — carried forward, audited at closure | Medium | Medium |
 
-The SuperServe sandbox integration and the FinancialAnalysisGuard are genuine differentiators that TLP doesn't have. The hardening work is about **tightening the state machine and adding enforcement primitives**, not rearchitecting.
+The SuperServe sandbox integration and the FinancialAnalysisGuard are genuine differentiators that CHP doesn't have. The hardening work is about **tightening the state machine and adding enforcement primitives**, not rearchitecting.
 
 ---
 
 ## 2. What CHP Already Has (No Action Needed)
 
-These are implemented and aligned with TLP. Confirming so we don't over-engineer:
+These are implemented and aligned with CHP. Confirming so we don't over-engineer:
 
 - R0 gate (Solvable / Scoped / Valid / Worth_it) with FATAL halt
 - Foundation Disclosure (3 weakest assumptions, 2 invalidation conditions, 1 key vulnerability)
@@ -41,7 +41,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 - Council spawn primitive for high-stakes / low-confidence
 - `TriangulationRunner` adversary pass
 - `AdversaryMeshAgent` wrapper
-- SuperServe sandbox execution (CHP-unique, not in TLP)
+- SuperServe sandbox execution (CHP-unique, not in CHP)
 - `FinancialAnalysisGuard` with 100% verification floor (CHP-unique)
 - CFO accuracy policy demoting unresolved outputs (CHP-unique)
 
@@ -51,7 +51,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 3.1 Phase Gate Enforcement
 
-**TLP spec:** Phase 1 (Spec Convergence, Rounds 1–2) must LOCK or PROVISIONAL_LOCK before Phase 2 (Implementation QA, Rounds 3–5) can begin. If Round >2 and Phase 1 status is still EXPLORING or PROVISIONAL → `PHASE_GATE_FAIL` → HALT.
+**CHP spec:** Phase 1 (Spec Convergence, Rounds 1–2) must LOCK or PROVISIONAL_LOCK before Phase 2 (Implementation QA, Rounds 3–5) can begin. If Round >2 and Phase 1 status is still EXPLORING or PROVISIONAL → `PHASE_GATE_FAIL` → HALT.
 
 **CHP status:** README mentions "Phase 1 gate enforcement before implementation rounds" but the enforcement logic is unclear. The `PROVISIONAL_LOCK` bridge (a Phase 1 item at ≥90% from both sides but awaiting third-party can proceed to Phase 2, where third-party validation acts as the Phase 2 entry test) is not documented.
 
@@ -66,7 +66,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 3.2 Payload Integrity Enforcement
 
-**TLP spec:** Every payload requires a `PAYLOAD_ECHO` in the STATE_SNAPSHOT confirming receipt of the prior payload by ID. Missing marker → retransmit with new ID. Echo mismatch → reject + resend. The 6-character alphanumeric ID is structurally required.
+**CHP spec:** Every payload requires a `PAYLOAD_ECHO` in the STATE_SNAPSHOT confirming receipt of the prior payload by ID. Missing marker → retransmit with new ID. Echo mismatch → reject + resend. The 6-character alphanumeric ID is structurally required.
 
 **CHP status:** `BEGIN_PAYLOAD` / `END_PAYLOAD` envelopes and `PAYLOAD_ECHO` are referenced but the **rejection and retransmission logic** is not documented as implemented.
 
@@ -82,9 +82,9 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 3.3 Round 5 Forcing
 
-**TLP spec:** Round 5 is terminal. No item can remain PROVISIONAL at Round 5 — it must be forced to LOCKED (if ≥90% + third-party) or UNRESOLVED. Max 5 rounds is a hard constraint.
+**CHP spec:** Round 5 is terminal. No item can remain PROVISIONAL at Round 5 — it must be forced to LOCKED (if ≥90% + third-party) or UNRESOLVED. Max 5 rounds is a hard constraint.
 
-**CHP status:** "Round 5 PROVISIONAL → UNRESOLVED forcing" and "max-5-round enforcement" are listed as implemented. **Verify** that the forcing logic handles the edge case where an item is at PROVISIONAL_LOCK (≥90% but awaiting third-party) at Round 5 — TLP says this should also resolve, not hang.
+**CHP status:** "Round 5 PROVISIONAL → UNRESOLVED forcing" and "max-5-round enforcement" are listed as implemented. **Verify** that the forcing logic handles the edge case where an item is at PROVISIONAL_LOCK (≥90% but awaiting third-party) at Round 5 — CHP says this should also resolve, not hang.
 
 **Action items:**
 
@@ -98,7 +98,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 4.1 Model Parity Gate
 
-**TLP spec (v2.2.4 addition):** Before session declaration, both models must be declared. If the delta is SIGNIFICANT (full generation gap) → HALT with user-facing warning. If MINOR → proceed with advisory logged in STATE_SNAPSHOT.
+**CHP spec (v2.2.4 addition):** Before session declaration, both models must be declared. If the delta is SIGNIFICANT (full generation gap) → HALT with user-facing warning. If MINOR → proceed with advisory logged in STATE_SNAPSHOT.
 
 **CHP status:** "Model parity checks that halt on significant asymmetry" is listed but the delta classification logic (NONE / MINOR / SIGNIFICANT) and the user-facing HALT rendering are not detailed.
 
@@ -114,7 +114,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 4.2 Flip Criteria Enforcement
 
-**TLP spec:** Every item at PROVISIONAL status must have explicit `FLIP_CRITERIA` — the specific evidence that would change the position. This is not optional.
+**CHP spec:** Every item at PROVISIONAL status must have explicit `FLIP_CRITERIA` — the specific evidence that would change the position. This is not optional.
 
 **CHP status:** "flip criteria" is mentioned in partner packet primitives but it's unclear whether the protocol **enforces** that PROVISIONAL items without flip criteria are rejected.
 
@@ -126,7 +126,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 4.3 Single-Winner Scoring Enforcement
 
-**TLP spec:** Scoring table must have exactly one winner. No ties. Inferior options get a 2-line elimination note.
+**CHP spec:** Scoring table must have exactly one winner. No ties. Inferior options get a 2-line elimination note.
 
 **CHP status:** "single-winner scoring validation" is listed as implemented. Confirm the elimination note requirement is enforced.
 
@@ -138,7 +138,7 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ### 4.4 Devil's Advocate at Round 3 Entry
 
-**TLP spec:** Devil's Advocate runs twice — once after Phase 0 Foundation Attack, once at Round 3 entry (Phase 2 entry). The second devil's advocate is explicitly about challenging whether convergence is premature.
+**CHP spec:** Devil's Advocate runs twice — once after Phase 0 Foundation Attack, once at Round 3 entry (Phase 2 entry). The second devil's advocate is explicitly about challenging whether convergence is premature.
 
 **CHP status:** "Phase 0 devil's advocate capture and Round 3 implementation devil's advocate support" is listed. Verify the Round 3 trigger is automatic (not optional) and that it produces the three required arguments: WHY_DIRECTION_WRONG, WHAT_NOT_SEEING, FALSE_CONSENSUS_RISK.
 
@@ -152,15 +152,13 @@ These are implemented and aligned with TLP. Confirming so we don't over-engineer
 
 ## 5. Medium-Priority Gaps — Strengthen Over Time
 
-### 5.1 Blind Spot Tracking (Replaces VCL)
+### 5.1 Blind Spot Tracking
 
-**Context:** TLP uses VCL (Value Constraint Ladder) for altitude diagnosis — a 10-rung ladder from Physical (R1) to Ontology (R10) that classifies where each decision item sits. You've asked to remove all VCL references.
-
-**What VCL actually does:** It forces both parties to diagnose *why* a lower-level fix won't work by identifying the constraint altitude. This prevents the protocol from cycling on symptoms when the real constraint is structural.
+**Context:** CHP uses Constraint Altitude Tagging (CAT) for altitude diagnosis — a 3-tier system (Tactical / Structural / Strategic) that classifies where each decision item sits.
 
 **CHP replacement — Constraint Altitude Tagging (CAT):**
 
-Instead of the full 10-rung VCL ladder, implement a simpler 3-tier constraint classification that serves the same diagnostic function under the CHP brand:
+Instead of the full 3-tier CAT system, implement a simpler 3-tier constraint classification that serves the same diagnostic function under the CHP brand:
 
 | Tier | Label | Maps to | Example |
 |---|---|---|---|
@@ -175,12 +173,12 @@ Instead of the full 10-rung VCL ladder, implement a simpler 3-tier constraint cl
 1. Add `ConstraintAltitude` enum: `TACTICAL`, `STRUCTURAL`, `STRATEGIC`
 2. Require constraint altitude tag on every objection (currently objections are freeform)
 3. Add batching rule: resolve T3 first, then T2, then T1
-4. Remove all VCL references from existing code and docs
+4. Remove all CAT references from existing code and docs
 5. Update STATE_SNAPSHOT to carry `CONSTRAINT_DIAGNOSIS` per item
 
 ### 5.2 Blind Spot & Structural Vulnerability Audit at Closure
 
-**TLP spec:** Convergence closure requires:
+**CHP spec:** Convergence closure requires:
 - `BLIND_SPOTS_FINAL` with Resolved and Accepted lists
 - `STRUCTURAL_VULNERABILITIES_FINAL` with Addressed and Accepted_Risk lists
 - These are auditable — they're part of the permanent decision record
@@ -199,7 +197,7 @@ Instead of the full 10-rung VCL ladder, implement a simpler 3-tier constraint cl
 
 ### 5.3 Pre-Flight Prior Beliefs Declaration
 
-**TLP spec:** Round 1 requires each party to declare:
+**CHP spec:** Round 1 requires each party to declare:
 - `MY_PRIOR_BELIEFS`: position + confidence (0–100%) per item
 - `BLIND_SPOTS`: 1–3 areas of acknowledged uncertainty
 
@@ -215,7 +213,7 @@ This creates an auditable record of where each party started, making it possible
 
 ### 5.4 Interruption Recovery
 
-**TLP spec:** If a session is interrupted mid-round, the protocol captures partial state and offers options: Continue, Restart Phase, or Next Round. This prevents data loss in long sessions.
+**CHP spec:** If a session is interrupted mid-round, the protocol captures partial state and offers options: Continue, Restart Phase, or Next Round. This prevents data loss in long sessions.
 
 **CHP status:** Not mentioned. Given that CHP sessions can involve multiple rounds across multiple models (with a human bridge), interruption recovery is operationally important.
 
@@ -231,7 +229,7 @@ This creates an auditable record of where each party started, making it possible
 
 ### 5.5 Section Limit Enforcement
 
-**TLP spec:** Hard limits on every section — 3 lines/item for agreements, 4 sentences for winner framing, 5 max objections at 2 lines each, etc. If exceeded → "tighten -1 next round."
+**CHP spec:** Hard limits on every section — 3 lines/item for agreements, 4 sentences for winner framing, 5 max objections at 2 lines each, etc. If exceeded → "tighten -1 next round."
 
 **CHP status:** Strict packet contract checks are listed but section-level limits aren't detailed.
 
@@ -245,7 +243,7 @@ This creates an auditable record of where each party started, making it possible
 
 ## 6. Structural Recommendations (CHP-Specific)
 
-These are not TLP gaps — they're hardening opportunities unique to CHP's architecture.
+These are not CHP gaps — they're hardening opportunities unique to CHP's architecture.
 
 ### 6.1 Unify the Raw Text Parser
 
@@ -267,7 +265,7 @@ The 100% verification floor for finance is a strong policy. Harden it by:
 
 ### 6.3 SuperServe as Third-Party Validator
 
-TLP requires third-party validation before LOCKED. CHP has SuperServe sandboxes. Natural fit:
+CHP requires third-party validation before LOCKED. CHP has SuperServe sandboxes. Natural fit:
 
 - For code proposals: SuperServe sandbox execution *is* the third-party validation
 - Run the proposal in isolation, capture exit code + output, use pass/fail as the validation result
@@ -288,7 +286,7 @@ This turns SuperServe from an R0-only gate into a full lifecycle validator.
 | **P1** | Flip criteria enforcement (4.2) | `chp/packet.py`, validator | 0.5 day |
 | **P1** | Devil's advocate R3 gate (4.4) | `chp/adversary.py` | 0.5 day |
 | **P1** | Raw text parser (6.1) | New `chp/parser.py` | 2 days |
-| **P2** | Constraint Altitude Tagging — VCL replacement (5.1) | New `chp/constraint.py`, objection model | 1 day |
+| **P2** | Constraint Altitude Tagging (5.1) | New `chp/constraint.py`, objection model | 1 day |
 | **P2** | Closure audit (5.2) | `chp/closure.py` | 0.5 day |
 | **P2** | Pre-flight declarations (5.3) | `chp/preflight.py` | 0.5 day |
 | **P2** | Interruption recovery (5.4) | `chp/recovery.py` | 1 day |
@@ -300,20 +298,6 @@ This turns SuperServe from an R0-only gate into a full lifecycle validator.
 
 ---
 
-## 8. VCL Removal Checklist
-
-All references to VCL (Value Constraint Ladder) should be removed from:
-
-- [ ] README.md — replace "VCL diagnosis" with "Constraint Altitude Tagging (CAT)"
-- [ ] `src/cme/chp/` — remove VCL diagnosis from origin packet template, replace with CAT
-- [ ] Partner packet SHAPE_LOCK — remove VCL section requirement, add CAT requirement on objections
-- [ ] STATE_SNAPSHOT — remove VCL fields, add `CONSTRAINT_DIAGNOSIS` per item
-- [ ] Transmission checklist — remove "VCL present" check, add "Constraint altitude tagged" check
-- [ ] Tests — update any VCL-specific assertions
-- [ ] Subsystem table in README — remove "VCL diagnosis" from CHP description
-- [ ] Verification checklist — remove "VCL present" line
-
-The CAT replacement (Section 5.1) gives you the same diagnostic function — forcing constraint-level diagnosis on objections — without the TLP-branded terminology.
 
 ---
 
@@ -331,6 +315,6 @@ The CAT replacement (Section 5.1) gives you the same diagnostic function — for
 
 ## 10. Bottom Line
 
-CHP is 70–75% of the way to a fully hardened protocol. The remaining work is enforcement logic, not new concepts. The three critical items (phase gate, payload integrity, R5 forcing) are each under a day of work and would close the biggest reliability gaps. The Constraint Altitude Tagging replacement for VCL is clean, simpler, and brand-aligned.
+CHP is 70–75% of the way to a fully hardened protocol. The remaining work is enforcement logic, not new concepts. The three critical items (phase gate, payload integrity, R5 forcing) are each under a day of work and would close the biggest reliability gaps. Constraint Altitude Tagging provides the same diagnostic function with a simpler, CHP-branded model.
 
-The SuperServe integration is a genuine moat — TLP has no execution sandbox concept. Extending it from R0-only to full-lifecycle third-party validation would be the single highest-leverage differentiator for CHP as a product.
+The SuperServe integration is a genuine moat — CHP has no execution sandbox concept. Extending it from R0-only to full-lifecycle third-party validation would be the single highest-leverage differentiator for CHP as a product.
