@@ -357,3 +357,25 @@ Stage Summary:
 - Modules: config, models/{meanflow,film,noise}, experts/{as,glft,glft_drift}, simulator, envs, agents/ppo, training/{pretrain,finetune}, evaluation
 - GitHub: https://github.com/Cubiczan/cubiczan-ml (commit 5405041)
 - Codeberg: https://codeberg.org/cubiczan/cubiczan-ml (commit 5405041)
+---
+Task ID: 2
+Agent: main
+Task: Rust port of critmin-oracle (Tier 1, #2)
+
+Work Log:
+- Cloned critmin-oracle from Codeberg (992 LOC Python, 1 pipeline file)
+- Analyzed Python source: config, sentiment NLP, regulatory scoring, price forecast, on-chain push, pipeline orchestration
+- Created crates/critmin-oracle/ with 7 source modules + CLI binary
+- Ported all Python logic: mineral config, scaling constants, keccak256 (sha3), sentiment analyzer, regulatory risk scorer, price forecast (log-linear regression), mock data generators
+- Added workspace deps: sha3, hex, futures to Cargo.toml
+- Fixed compilation errors: lib.rs missing, format traits, import scoping
+- All 22 tests pass, demo binary works correctly
+- Updated cubiczan-ml README: new crate docs, stats (335 total tests), arch diagram
+- Updated critmin-oracle standalone README: Rust port section, badges, quick start
+- Committed and pushed to GitHub + Codeberg
+
+Stage Summary:
+- New crate: crates/critmin-oracle/ (1,122 lines Rust across 10 files)
+- 22 unit tests, all passing
+- Full workspace: 335/335 tests pass (excl. pyo3 which needs Python env)
+- Pushed: cubiczan-ml commit 3dc1541, critmin-oracle commit ac495ed
