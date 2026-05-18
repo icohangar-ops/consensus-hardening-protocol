@@ -1,172 +1,80 @@
-"""CLI entry point for FinFlowRL training pipeline."""
+#!/usr/bin/env python3
+"""CLI: Train FinFlowRL (pre-train + fine-tune)."""
+import sys, os, argparse
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
-import argparse
-import sys
+from finflowrl.config.settings import Config
+from finflowrl.envs.hft_env import HFTEnv
+from finflowrl.models.meanflow import MeanFlowPolicy
+from finflowrl.agents.ppo import PPOAgent
+from finflowrl.experts.glft import GLFTExpert
+from finflowrl.experts.avellaneda_stoikov import AvellanedaStoikovExpert
+from finflowrl.experts.glft_drift import GLFTDriftExpert
+from finflowrl.training.pretrain import PreTrainer
+from finflowrl.training.finetune import FineTuner
 
-from finflowrl.utils import Config, load_config
+
+EXPERTS = {"as": AvellanedaStoikovExpert, "glft": GLFTExpert, "glft_drift": GLFTDriftExpert}
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="FinFlowRL: Train Imitation-RL policies for financial stochastic control",
-    )
-    parser.add_argument(
-        "--config", type=str, default="configs/default.yaml",
-        help="Path to YAML configuration file",
-    )
-    parser.add_argument(
-        "--stage", type=str, choices=["pretrain", "finetune", "both"], default="pretrain",
-        help="Training stage: pretrain (Stage 1), finetune (Stage 2), or both",
-    )
-    parser.add_argument(
-        "--epochs", type=int, default=None,
-        help="Override number of training epochs",
-    )
-    parser.add_argument(
-        "--batch-size", type=int, default=None,
-        help="Override batch size",
-    )
-    parser.add_argument(
-        "--lr", type=float, default=None,
-        help="Override learning rate",
-    )
-    parser.add_argument(
-        "--device", type=str, default=None,
-        help="Override compute device (cpu/cuda/auto)",
-    )
-    parser.add_argument(
-        "--seed", type=int, default=None,
-        help="Override random seed",
-    )
-    parser.add_argument(
-        "--checkpoint", type=str, default=None,
-        help="Path to pre-trained checkpoint for fine-tuning",
-    )
+    parser = argparse.ArgumentParser(description="Train FinFlowRL")
+    parser.add_argument("--config", type=str, default=None, help="Path to YAML config")
+    parser.add_argument("--expert", type=str, default="glft", choices=list(EXPERTS.keys()))
+    parser.add_argument("--pretrain-iters", type=int, default=500)
+    parser.add_argument("--finetune-epochs", type=int, default=5)
+    parser.add_argument("--output", type=str, default="checkpoints", help="Output dir")
     args = parser.parse_args()
 
-    # Load configuration
-    try:
-        config = load_config(args.config)
-    except FileNotFoundError:
-        print(f"[WARNING] Config file '{args.config}' not found. Using defaults.")
-        config = Config()
+    cfg = Config(args.config)
+    print(f"[FinFlowRL] Config: expert={args.expert}, pretrain={args.pretrain_iters}, finetune={args.finetune_epochs}")
 
-    # Apply CLI overrides
-    if args.epochs is not None:
-        if args.stage in ("pretrain", "both"):
-            config.pretrain.num_epochs = args.epochs
-        if args.stage in ("finetune", "both"):
-            config.finetune.ppo_epochs = args.epochs
-    if args.batch_size is not None:
-        config.pretrain.batch_size = args.batch_size
-    if args.lr is not None:
-        config.pretrain.learning_rate = args.lr
-        config.finetune.learning_rate = args.lr
-    if args.device is not None:
-        config.device = args.device
-    if args.seed is not None:
-        config.seed = args.seed
+    os.makedirs(args.output, exist_ok=True)
 
-    print("=" * 60)
-    print("  FinFlowRL Training Pipeline")
-    print("=" * 60)
-    print(config.summary())
-    print(f"  Stage:       {args.stage}")
-    print(f"  Checkpoint:  {args.checkpoint or 'None'}")
-    print("=" * 60)
+    # Build components
+    env = HFTEnv(
+        max_steps=cfg.get("pretrain.steps_per_episode", 200),
+        max_position=cfg.get("env.max_position", 10),
+        seed=cfg.get("simulator.seed", 42),
+    )
+    policy = MeanFlowPolicy(
+        obs_dim=cfg.get("policy.obs_dim", 6),
+        act_dim=cfg.get("policy.act_dim", 1),
+        hidden_sizes=tuple(cfg.get("policy.hidden_sizes", [128, 128, 64])),
+    )
+    print(f"[FinFlowRL] MeanFlow params: {policy.n_params:,}")
 
-    # Resolve device
-    if config.device == "auto":
-        import torch
-        config.device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"  Using device: {config.device}")
+    expert = EXPERTS[args.expert]()
 
-    # Stage 1: Pre-train MeanFlow on expert demonstrations
-    if args.stage in ("pretrain", "both"):
-        print("\n[Stage 1] MeanFlow Pre-training")
-        print("-" * 40)
+    # Stage 1: Pre-train (expert distillation)
+    print("\n=== Stage 1: Expert Distillation ===")
+    pretrainer = PreTrainer(
+        policy, env, expert,
+        n_episodes=cfg.get("pretrain.n_episodes", 50),
+        steps_per_episode=cfg.get("pretrain.steps_per_episode", 200),
+    )
+    pretrainer.train(n_iterations=args.pretrain_iters)
 
-        from finflowrl.models import MeanFlowPolicy
-        from finflowrl.training import MeanFlowPretrainer
-        from finflowrl.utils.data import generate_expert_demonstrations
+    # Stage 2: Fine-tune (PPO)
+    print("\n=== Stage 2: PPO Fine-tuning ===")
+    ppo = PPOAgent(obs_dim=cfg.get("policy.obs_dim", 6), act_dim=3, hidden_sizes=(64, 64))
+    finetuner = FineTuner(policy, env, ppo, n_episodes=10, steps_per_episode=200)
+    finetuner.train(n_epochs=args.finetune_epochs)
 
-        print("  Generating expert demonstrations...")
-        states, actions, meta = generate_expert_demonstrations(
-            config, num_scenarios=4, steps_per_scenario=100
-        )
-        print(f"  Dataset: {len(states)} samples")
+    # Save policy
+    import json
+    params = policy.get_params()
+    saveable = {}
+    for k, v in params.items():
+        if isinstance(v, list):
+            saveable[k] = [x.tolist() for x in v]
+        elif isinstance(v, np.ndarray):
+            saveable[k] = v.tolist()
+    with open(os.path.join(args.output, "meanflow_params.json"), "w") as f:
+        json.dump(saveable, f)
+    ppo.save(os.path.join(args.output, "ppo_weights.json"))
 
-        model = MeanFlowPolicy(
-            state_dim=config.model.state_dim,
-            action_dim=config.model.action_dim,
-            noise_dim=config.model.noise_dim,
-            T_obs=config.model.T_obs,
-            T_pred=config.model.T_pred,
-            T_exec=config.model.T_exec,
-            hidden_dim=config.model.hidden_dim,
-            num_layers=config.model.num_layers,
-        )
-        print(f"  Model parameters: {model.count_parameters():,}")
-
-        pretrainer = MeanFlowPretrainer(
-            model=model,
-            learning_rate=config.pretrain.learning_rate,
-            weight_decay=config.pretrain.weight_decay,
-            batch_size=config.pretrain.batch_size,
-            num_epochs=config.pretrain.num_epochs,
-            device=config.device,
-        )
-        history = pretrainer.train(
-            states=states,
-            actions=actions,
-        )
-        print(f"  Final loss: {history['loss'][-1]:.6f}")
-        print("  [Stage 1 Complete]")
-
-    # Stage 2: Fine-tune with PPO in noise space
-    if args.stage in ("finetune", "both"):
-        print("\n[Stage 2] FlowRL Fine-tuning")
-        print("-" * 40)
-
-        from finflowrl.models import MeanFlowPolicy, NoisePolicy
-        from finflowrl.training import FlowRLFinetuner
-
-        model = MeanFlowPolicy(
-            state_dim=config.model.state_dim,
-            action_dim=config.model.action_dim,
-            noise_dim=config.model.noise_dim,
-            T_obs=config.model.T_obs,
-            T_pred=config.model.T_pred,
-            T_exec=config.model.T_exec,
-            hidden_dim=config.model.hidden_dim,
-            num_layers=config.model.num_layers,
-        )
-
-        if args.checkpoint:
-            print(f"  Loading checkpoint: {args.checkpoint}")
-            pretrainer = MeanFlowPretrainer(model=model, device=config.device)
-            pretrainer.load_checkpoint(args.checkpoint)
-
-        noise_policy = NoisePolicy(
-            state_dim=config.model.T_obs * config.model.state_dim,
-            noise_dim=config.model.T_pred * config.model.noise_dim,
-            hidden_dim=64,
-        )
-        print(f"  NoisePolicy parameters: {noise_policy.count_parameters()::,}")
-
-        finetuner = FlowRLFinetuner(
-            meanflow_model=model,
-            noise_policy=noise_policy,
-            learning_rate=config.finetune.learning_rate,
-            gamma=config.finetune.gamma,
-            clip_epsilon=config.finetune.clip_epsilon,
-            device=config.device,
-        )
-        history = finetuner.train(total_timesteps=1000)
-        print(f"  Final reward: {history['reward'][-1]:.4f}")
-        print("  [Stage 2 Complete]")
-
-    print("\n[Done] Training complete.")
+    print(f"\n[FinFlowRL] Done. Checkpoints saved to {args.output}/")
 
 
 if __name__ == "__main__":
