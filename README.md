@@ -29,7 +29,7 @@ Consensus Hardening Protocol composes five well-specified subsystems to solve al
 
 | Subsystem | Role | Spec it implements |
 |---|---|---|
-| **Consensus Hardening Protocol** | Cross-model decision hardening with gates, packets, lock states, adversarial foundation attack, VCL diagnosis, and third-party validation | `cme.chp` |
+| **Consensus Hardening Protocol** | Cross-model decision hardening with gates, packets, lock states, adversarial foundation attack, and third-party validation | `cme.chp` |
 | **Cognitive Mesh Protocol** | Structured expansion ↔ compression reasoning with grounding checks | `cognitive-mesh-protocol.skill` |
 | **Context Engineering Framework** | Layered short/long-term memory + entity/event/task schema | `context-engineering-framework.skill` |
 | **Agentic Context Engineering** | Evolving playbooks with Generator/Reflector/Curator, delta-only updates | `agentic-context-engineering.skill` |
@@ -158,7 +158,6 @@ The current implementation covers:
 - **R0 gate** and foundation score gate before packet generation
 - adversarial foundation disclosure and foundation attack
 - Phase 0 devil's advocate capture and Round 3 implementation devil's advocate support
-- VCL diagnosis in the origin packet
 - `BEGIN_PAYLOAD` / `END_PAYLOAD` packet envelopes with required `PAYLOAD_ECHO`
 - structured `STATE_SNAPSHOT` persistence
 - Phase 1 gate enforcement before implementation rounds
