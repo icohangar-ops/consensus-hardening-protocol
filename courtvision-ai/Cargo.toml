@@ -1,5 +1,5 @@
 [package]
-name = "greenverify-ai"
+name = "courtvision-ai"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
