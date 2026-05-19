@@ -1,13 +1,9 @@
 # Consensus Hardening Protocol
 
 
-## Demo
+## Overview
 
-![CHP Thumbnail](docs/media/chp-thumbnail.png)
-
-[![Watch the 3-minute CHP demo](docs/media/chp-thumbnail.png)](docs/media/chp-demo-3min.mp4)
-
-> _A 3-minute walkthrough of CHP: session initialization, partner packet ingestion, adversarial validation, and final lock._
+![CHP Overview](docs/media/chp-thumbnail.png)
 
 Developer and enterprise infrastructure for building hardened, human-auditable multi-agent decision workflows.
 
