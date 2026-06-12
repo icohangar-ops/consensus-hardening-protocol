@@ -3,7 +3,7 @@ title: "I Built a Multi-Agent Decision Governance System Powered by Gemma 4"
 published: false
 description: "Consensus Hardening Protocol — a hardened, auditable multi-agent AI mesh where Gemma 4 31B drives deep adversarial reasoning, grounding checks, and lock-state governance for high-stakes decisions."
 tags: google, gemma, ai, python, agents
-cover_image: https://github.com/Cubiczan/consensus-hardening-protocol/raw/main/docs/media/chp-gemma4-cover.png
+cover_image: https://github.com/icohangar-ops/consensus-hardening-protocol/raw/main/docs/media/chp-gemma4-cover.png
 canonical_url: https://dev.to/cubiczan/i-built-a-multi-agent-decision-governance-system-powered-by-gemma-4-23in
 ---
 
@@ -220,7 +220,7 @@ That workflow is typed, dependency-ordered, and owner-attributed. Pipe it into T
 The deterministic demo runs entirely offline with zero API calls:
 
 ```bash
-git clone https://github.com/Cubiczan/consensus-hardening-protocol.git
+git clone https://github.com/icohangar-ops/consensus-hardening-protocol.git
 cd consensus-hardening-protocol
 pip install -e .
 cme demo "Should we invest $4M in a new enterprise tier?"
@@ -258,17 +258,17 @@ Swap the deterministic backend for Gemma 4, and every test still passes — beca
 
 The 3-minute walkthrough below shows the full decision lifecycle: session initialization, multi-agent orchestration, adversarial validation, and lock-state progression.
 
-https://github.com/Cubiczan/consensus-hardening-protocol/raw/main/docs/media/chp-demo-3min.mp4
+https://github.com/icohangar-ops/consensus-hardening-protocol/raw/main/docs/media/chp-demo-3min.mp4
 
 ## Code
 
-[**Cubiczan/consensus-hardening-protocol**](https://github.com/Cubiczan/consensus-hardening-protocol) — GitHub
+[**Cubiczan/consensus-hardening-protocol**](https://github.com/icohangar-ops/consensus-hardening-protocol) — GitHub
 
 [**cubiczan/consensus-hardening-protocol**](https://codeberg.org/cubiczan/consensus-hardening-protocol) — Codeberg
 
 ```bash
 # Quick start
-git clone https://github.com/Cubiczan/consensus-hardening-protocol.git
+git clone https://github.com/icohangar-ops/consensus-hardening-protocol.git
 cd consensus-hardening-protocol
 pip install -e .
 cme demo "Should we fund a new enterprise workflow team this quarter?"

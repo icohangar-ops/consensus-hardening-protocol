@@ -131,7 +131,7 @@ python -m chp_superserve batch proposals.json
 ## Quick start
 
 ```bash
-git clone https://github.com/zan-maker/consensus-hardening-protocol.git
+git clone https://github.com/icohangar-ops/consensus-hardening-protocol.git
 cd consensus-hardening-protocol
 pip install -e .
 cme demo
