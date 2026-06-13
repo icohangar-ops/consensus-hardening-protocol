@@ -282,7 +282,7 @@ text_centered(d, "Every claim traced.", 350, FB, WHITE)
 text_centered(d, "Every gate enforced.", 400, FB, WHITE)
 text_centered(d, "Consensus is not enough", 460, FB, WHITE)
 text_centered(d, "until it is hardened.", 510, FB, GREEN)
-text_centered(d, "github.com/Cubiczan/consensus-hardening-protocol", 590, FM_S, CYAN)
+text_centered(d, "github.com/icohangar-ops/consensus-hardening-protocol", 590, FM_S, CYAN)
 text_centered(d, "MIT License | 42 tests passing | Zero external dependencies", 630, FM_T, GRAY)
 hold(img, 15)
 
