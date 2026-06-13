@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from cubiczan_resilience import atomic_write
+
 from cme.chp.models import DecisionCase, SessionStatus
 
 
@@ -46,7 +48,9 @@ class DecisionRegistry:
     def save(self, path: str | Path) -> None:
         target = Path(path)
         data = {decision_id: case.to_dict() for decision_id, case in self._cases.items()}
-        target.write_text(json.dumps(data, indent=2))
+        # Persist atomically: a crash mid-write leaves the prior registry file
+        # intact rather than a truncated/corrupt JSON document.
+        atomic_write(target, json.dumps(data, indent=2))
 
     @classmethod
     def load(cls, path: str | Path) -> "DecisionRegistry":

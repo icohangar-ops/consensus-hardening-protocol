@@ -13,7 +13,10 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Tuple
 
+from cubiczan_resilience import resilient
+
 from cme.chp.models import DecisionCase, Dossier, FoundationAttack, FoundationDisclosure
+from cme.finance._workbook_tools import WORKBOOK_SUBPROCESS_TIMEOUT, resolve_tools_dir
 
 
 SEASONALITY_BY_MONTH = {
@@ -219,9 +222,14 @@ def load_outflows_csv(path: str | Path) -> List[OutflowRow]:
     ]
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def load_cash_forecast_workbook(path: str | Path) -> CashForecastWorkbookInput:
     repo_root = Path(__file__).resolve().parents[3]
-    extractor_path = repo_root / "tools" / "extract_cash_forecast_input.mjs"
+    extractor_path = resolve_tools_dir() / "extract_cash_forecast_input.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
 
@@ -235,6 +243,7 @@ def load_cash_forecast_workbook(path: str | Path) -> CashForecastWorkbookInput:
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
         payload = json.loads(output_json.read_text(encoding="utf-8"))
     except subprocess.CalledProcessError as exc:
@@ -427,6 +436,11 @@ def render_cash_forecast_markdown(result: CashForecast13WResult) -> str:
     return "\n".join(lines)
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_cash_forecast_workbook(
     result: CashForecast13WResult,
     *,
@@ -434,7 +448,7 @@ def export_cash_forecast_workbook(
     output_path: str | Path,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_cash_forecast_workbook.mjs"
+    builder_path = resolve_tools_dir() / "build_cash_forecast_workbook.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
 
@@ -456,6 +470,7 @@ def export_cash_forecast_workbook(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Workbook export failed.") from exc
@@ -465,6 +480,11 @@ def export_cash_forecast_workbook(
     return output_file
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_cash_forecast_input_template(
     *,
     output_path: str | Path,
@@ -476,7 +496,7 @@ def export_cash_forecast_input_template(
     outflow_rows: List[OutflowRow] | None = None,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_cash_forecast_input_template.mjs"
+    builder_path = resolve_tools_dir() / "build_cash_forecast_input_template.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
 
@@ -528,6 +548,7 @@ def export_cash_forecast_input_template(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Input template export failed.") from exc

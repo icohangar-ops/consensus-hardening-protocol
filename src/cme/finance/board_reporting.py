@@ -12,7 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
+from cubiczan_resilience import resilient
+
 from cme.chp.models import DecisionCase, Dossier, FoundationAttack, FoundationDisclosure
+from cme.finance._workbook_tools import WORKBOOK_SUBPROCESS_TIMEOUT, resolve_tools_dir
 
 
 @dataclass
@@ -259,6 +262,11 @@ def render_board_report_markdown(result: BoardReportResult) -> str:
     return "\n".join(lines)
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_board_report_pptx(
     result: BoardReportResult,
     *,
@@ -266,7 +274,7 @@ def export_board_report_pptx(
     output_path: str | Path,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_board_report_deck.mjs"
+    builder_path = resolve_tools_dir() / "build_board_report_deck.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
     payload = {
@@ -285,6 +293,7 @@ def export_board_report_pptx(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Board deck export failed.") from exc

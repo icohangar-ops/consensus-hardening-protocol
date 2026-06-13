@@ -12,7 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List
 
+from cubiczan_resilience import resilient
+
 from cme.chp.models import DecisionCase, Dossier, FoundationAttack, FoundationDisclosure
+from cme.finance._workbook_tools import WORKBOOK_SUBPROCESS_TIMEOUT, resolve_tools_dir
 
 
 SEASON_LENGTH = 12
@@ -272,6 +275,11 @@ def render_saas_operating_model_markdown(result: SaaSOperatingModelResult) -> st
     return "\n".join(lines)
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_saas_operating_model_workbook(
     result: SaaSOperatingModelResult,
     *,
@@ -279,7 +287,7 @@ def export_saas_operating_model_workbook(
     output_path: str | Path,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_saas_operating_model_workbook.mjs"
+    builder_path = resolve_tools_dir() / "build_saas_operating_model_workbook.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
     payload = {
@@ -300,6 +308,7 @@ def export_saas_operating_model_workbook(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Workbook export failed.") from exc

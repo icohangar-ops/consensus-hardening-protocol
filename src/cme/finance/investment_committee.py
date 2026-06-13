@@ -11,7 +11,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 
+from cubiczan_resilience import resilient
+
 from cme.chp.models import DecisionCase, Dossier, FoundationAttack, FoundationDisclosure
+from cme.finance._workbook_tools import WORKBOOK_SUBPROCESS_TIMEOUT, resolve_tools_dir
 
 
 WEIGHTS = {
@@ -297,6 +300,11 @@ def render_investment_committee_markdown(result: InvestmentCommitteeResult) -> s
     return "\n".join(lines)
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_investment_committee_workbook(
     result: InvestmentCommitteeResult,
     *,
@@ -304,7 +312,7 @@ def export_investment_committee_workbook(
     output_path: str | Path,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_investment_committee_workbook.mjs"
+    builder_path = resolve_tools_dir() / "build_investment_committee_workbook.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
     payload = {"committee": result.to_dict(), "session_summary": session_summary}
@@ -322,6 +330,7 @@ def export_investment_committee_workbook(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Workbook export failed.") from exc

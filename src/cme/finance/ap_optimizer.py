@@ -13,7 +13,10 @@ import subprocess
 import tempfile
 from typing import Any, Dict, Iterable, List, Sequence
 
+from cubiczan_resilience import resilient
+
 from cme.chp.models import DecisionCase, Dossier, FoundationAttack, FoundationDisclosure
+from cme.finance._workbook_tools import WORKBOOK_SUBPROCESS_TIMEOUT, resolve_tools_dir
 
 
 REQUIRED_COLUMNS = {
@@ -414,6 +417,11 @@ def render_ap_optimizer_markdown(result: APOptimizerResult) -> str:
     return "\n".join(lines)
 
 
+@resilient(
+    timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
+    max_attempts=3,
+    retryable_exceptions=(subprocess.TimeoutExpired,),
+)
 def export_ap_optimizer_workbook(
     result: APOptimizerResult,
     *,
@@ -421,7 +429,7 @@ def export_ap_optimizer_workbook(
     output_path: str | Path,
 ) -> Path:
     repo_root = Path(__file__).resolve().parents[3]
-    builder_path = repo_root / "tools" / "build_ap_optimizer_workbook.mjs"
+    builder_path = resolve_tools_dir() / "build_ap_optimizer_workbook.mjs"
     node_path = _resolve_node_path()
     _ensure_node_modules_link(repo_root)
     payload = {
@@ -442,6 +450,7 @@ def export_ap_optimizer_workbook(
             cwd=repo_root,
             capture_output=True,
             text=True,
+            timeout=WORKBOOK_SUBPROCESS_TIMEOUT,
         )
     except subprocess.CalledProcessError as exc:
         raise RuntimeError(exc.stderr or exc.stdout or "Workbook export failed.") from exc
