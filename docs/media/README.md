@@ -14,6 +14,11 @@ that produces both the demo video and the static JPGs in one run.
 | `chp-social-preview.jpg` | JPG 1280×640 | ~65 KB | GitHub / OpenGraph social preview card |
 | `chp-demo.mp4` | MP4 H.264 1920×1080 30fps | ~650 KB | ~30s README demo (8 animated scenes) |
 | `chp-demo-3min.mp4` | MP4 H.264 1920×1080 30fps | ~650 KB | Legacy filename kept as a mirror of `chp-demo.mp4` so existing links keep resolving |
+| `chp-shot-architecture.jpg` | JPG 1920×1080 | ~62 KB | Screenshot from video — six-subsystem architecture scene |
+| `chp-shot-chp-start.jpg` | JPG 1920×1080 | ~66 KB | Screenshot from video — `chp-start` terminal session |
+| `chp-shot-partner-receive.jpg` | JPG 1920×1080 | ~47 KB | Screenshot from video — `chp-receive` partner packet ingestion |
+| `chp-shot-validate-locked.jpg` | JPG 1920×1080 | ~102 KB | Screenshot from video — `chp-validate` with `LOCKED` state reveal |
+| `chp-shot-benchmark.jpg` | JPG 1920×1080 | ~88 KB | Screenshot from video — hardened-vs-unhardened benchmark chart |
 
 ## Regenerating
 
@@ -31,6 +36,22 @@ Requirements:
 
 The script is path-agnostic: pass any target directory with `--media-dir`
 and it will drop the JPGs and MP4s there.
+
+### Regenerating screenshots
+
+The `chp-shot-*.jpg` files are extracted from `chp-demo.mp4` at fixed
+timestamps using ffmpeg. To refresh them after rebuilding the video:
+
+```bash
+ffmpeg -y -ss 11.0  -i docs/media/chp-demo.mp4 -frames:v 1 -q:v 2 docs/media/chp-shot-architecture.jpg
+ffmpeg -y -ss 16.5  -i docs/media/chp-demo.mp4 -frames:v 1 -q:v 2 docs/media/chp-shot-chp-start.jpg
+ffmpeg -y -ss 20.0  -i docs/media/chp-demo.mp4 -frames:v 1 -q:v 2 docs/media/chp-shot-partner-receive.jpg
+ffmpeg -y -ss 23.5  -i docs/media/chp-demo.mp4 -frames:v 1 -q:v 2 docs/media/chp-shot-validate-locked.jpg
+ffmpeg -y -ss 27.5  -i docs/media/chp-demo.mp4 -frames:v 1 -q:v 2 docs/media/chp-shot-benchmark.jpg
+```
+
+Timestamps correspond to the peak (last fully-rendered frame) of each
+scene in `build_video.py`.
 
 ## Legacy / deprecated
 

@@ -5,11 +5,33 @@
 
 ## Demo
 
-![CHP Thumbnail](docs/media/chp-thumbnail.jpg)
-
 [![Watch the CHP demo (~30s)](docs/media/chp-thumbnail.jpg)](docs/media/chp-demo.mp4)
 
 > _A 30-second walkthrough of CHP: title, problem, architecture, live `chp-start` / `chp-receive` / `chp-validate` terminal sessions, hardened-vs-unhardened benchmark, and closing card. A longer mirror is also available at [`docs/media/chp-demo-3min.mp4`](docs/media/chp-demo-3min.mp4)._
+
+<!-- chp-screenshot-gallery -->
+### Screenshots
+
+**Architecture — six composed subsystems**
+
+![Architecture](docs/media/chp-shot-architecture.jpg)
+
+**`chp-start` — session initialization, gate checks, adversarial foundation attack**
+
+![chp-start terminal](docs/media/chp-shot-chp-start.jpg)
+
+**`chp-receive` — partner packet ingestion with explicit state-machine transition**
+
+![chp-receive terminal](docs/media/chp-shot-partner-receive.jpg)
+
+**`chp-validate` — third-party validation promotes the item to `LOCKED`**
+
+![chp-validate terminal](docs/media/chp-shot-validate-locked.jpg)
+
+**Benchmark — hardened vs unhardened consensus on the same decision and models**
+
+![Benchmark chart](docs/media/chp-shot-benchmark.jpg)
+<!-- /chp-screenshot-gallery -->
 
 ### Protocol lifecycle at a glance
 
