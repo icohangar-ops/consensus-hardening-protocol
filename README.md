@@ -5,11 +5,17 @@
 
 ## Demo
 
-![CHP Thumbnail](docs/media/chp-thumbnail.png)
+![CHP Thumbnail](docs/media/chp-thumbnail.jpg)
 
-[![Watch the 3-minute CHP demo](docs/media/chp-thumbnail.png)](docs/media/chp-demo-3min.mp4)
+[![Watch the CHP demo (~30s)](docs/media/chp-thumbnail.jpg)](docs/media/chp-demo.mp4)
 
-> _A 3-minute walkthrough of CHP: session initialization, partner packet ingestion, adversarial validation, and final lock._
+> _A 30-second walkthrough of CHP: title, problem, architecture, live `chp-start` / `chp-receive` / `chp-validate` terminal sessions, hardened-vs-unhardened benchmark, and closing card. A longer mirror is also available at [`docs/media/chp-demo-3min.mp4`](docs/media/chp-demo-3min.mp4)._
+
+### Protocol lifecycle at a glance
+
+![CHP Protocol Phases](docs/media/chp-phases.jpg)
+
+> _Four hardened phases (Propose -> Validate -> Triangulate -> Harden) with explicit entry gates, state transitions, and audit artifacts. `LOCKED` is the only state downstream systems may consume._
 
 Developer and enterprise infrastructure for building hardened, human-auditable multi-agent decision workflows.
 
@@ -256,6 +262,10 @@ See [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md) for the full walkthrough, recommended tal
 ---
 
 ## Architecture
+
+![CHP Architecture](docs/media/chp-architecture.jpg)
+
+> _Six composed subsystems. Each is independently specifiable and composable; CHP sits at the center coordinating cross-model decision hardening._
 
 ```
                         ┌──────────────────────────┐
